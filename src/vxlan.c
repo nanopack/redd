@@ -94,7 +94,8 @@ vxlan_add_ip(char *ip_address)
 {
 	int ret = 0;
 	if (!vxlan_has_ip(ip_address)) {
-
+		char *ip = strdup(ip_address);
+		listAddNodeTail(server.vxlan_ips, (void *)ip);
 		ret = run_cmd(["ip", "addr", "add", ip_address, "dev", "vxlan0"]);
 	}
 	return ret;
@@ -105,7 +106,9 @@ vxlan_remove_ip(char *ip_address)
 {
 	int ret = 0;
 	if (vxlan_has_ip(ip_address)) {
-
+		listNode *node = listSearchKey(server.vxlan_ips, (void *)ip_address);
+		if (node)
+			listDelNode(server.vxlan_ips, node);
 		ret = run_cmd(["ip", "addr", "del", ip_address, "dev", "vxlan0"]);
 	}
 	return ret;
