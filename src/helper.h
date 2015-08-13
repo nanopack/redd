@@ -29,6 +29,7 @@
 
 #include <msgpack.h>
 #include <stdint.h>
+#include <uv.h>
 
 
 // helper functions
