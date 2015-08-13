@@ -32,6 +32,7 @@
 #include "helper.h"
 #include "log.h"
 #include "node.h"
+#include "util/adlist.h"
 
 static char
 *generate_data(int *size)
