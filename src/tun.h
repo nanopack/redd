@@ -31,6 +31,6 @@ typedef struct vtep_tun_s {
 	async_io_t			async_io;
 } vtep_tun_t;
 
-int init_tun();
+int tun_init();
 
 #endif

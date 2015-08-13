@@ -108,7 +108,7 @@ tun_write_cb(void* data, int status){
 }
 
 int
-init_tun()
+tun_init()
 {
 	int fd;
 	int err;
