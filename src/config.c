@@ -30,7 +30,7 @@
 #include <string.h>	/* string operations */
 #include <syslog.h>	/* definitions for system error logging */
 
-#include "vtep.h"
+#include "vtepd.h"
 #include "vxlan.h"
 #include "log.h"
 #include "util/sds.h"		/* dynamic safe strings */

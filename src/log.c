@@ -25,7 +25,7 @@
  */
 
 #include "log.h"
-#include "vtep.h"
+#include "vtepd.h"
 
 #include <stdio.h>		/* standard buffered input/output */
 #include <stdlib.h>		/* standard library definitions */

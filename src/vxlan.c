@@ -32,7 +32,7 @@
 #include "log.h"
 #include "util/adlist.h"
 #include "util/cmd.h"
-#include "vtep.h"
+#include "vtepd.h"
 #include "vxlan.h"
 
 void *dup_ip(void *ptr)

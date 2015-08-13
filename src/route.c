@@ -40,7 +40,7 @@
 #include "tun.h"
 #include "udp.h"
 #include "util/adlist.h"
-#include "vtep.h"
+#include "vtepd.h"
 #include "vxlan.h"
 
 static void

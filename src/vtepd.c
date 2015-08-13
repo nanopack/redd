@@ -35,14 +35,10 @@
 
 #include "api.h"
 #include "config.h"
-#include "tower.h"
-#include "vtep.h"
+#include "vtepd.h"
 #include "log.h"
 #include "util/util.h"
 #include "route.h"
-#include "tower/member_add.h"
-#include "tower/member_remove.h"
-#include "tower/vtep_identify.h"
 
 /* server global state */
 vtep_server_t server; 

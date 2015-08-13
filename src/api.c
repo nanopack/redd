@@ -35,7 +35,7 @@
 
 #include "api.h"
 #include "log.h"
-#include "vtep.h"
+#include "vtepd.h"
 
 #include "api/ip_add.h"
 #include "api/ip_list.h"
