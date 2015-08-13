@@ -9,6 +9,11 @@ AC_CONFIG_SRCDIR([src/vtepd.c])
 AC_PROG_CC
 AC_PROG_CC_STDC
 
+AC_CHECK_LIB(pthread, pthread_mutexattr_init,
+  [],
+  [AC_MSG_ERROR([pthread libraries not found.])]
+)
+
 AC_CHECK_HEADERS(uv.h,
   [],
   [AC_MSG_ERROR([libuv header files not found.]); break]
@@ -47,16 +52,6 @@ AC_CHECK_HEADERS(bframe.h,
 AC_CHECK_LIB(bframe, new_bframe,
   [],
   [AC_MSG_ERROR([bframe libraries not found.])]
-)
-
-AC_CHECK_LIB(socket, ether_ntoa,
-  [],
-  [AC_MSG_ERROR([socket libraries not found.])]
-)
-
-AC_CHECK_LIB(pthread, pthread_mutexattr_init,
-  [],
-  [AC_MSG_ERROR([pthread libraries not found.])]
 )
 
 AC_OUTPUT(Makefile src/Makefile)
