@@ -61,7 +61,7 @@ char
 int
 validate_ip_address(char *ip_address)
 {
-	if (host != NULL)
+	if (ip_address != NULL)
 		return 1;
 	else
 		return 0;
