@@ -25,6 +25,7 @@
  */
 
 #include <string.h>
+#include <stdlib.h>
 
 #include "node.h"
 #include "util/adlist.h"
