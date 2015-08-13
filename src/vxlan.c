@@ -69,13 +69,13 @@ vxlan_init()
 	 */
 	if (vxlan_exists != 0) {
 		if (run_cmd(["ip", "link", "add", server.vxlan_name, "type", "vxlan", "id", server.vxlan_vni, "group", server.vxlan_group, "dev", server.vxlan_interface]) != 0) {
-			vtep_log(VTEP_WARNING, "Failed to create link %s", server.vxlan_name);
+			vtep_log(VTEPD_WARNING, "Failed to create link %s", server.vxlan_name);
 			return -1;
 		}
 	}
 	if (run_cmd(["ip", "link", "set", server.vxlan_name, "up"]) != 0)
 	{
-		vtep_log(VTEP_WARNING, "Failed to set link %s up", server.vxlan_name);
+		vtep_log(VTEPD_WARNING, "Failed to set link %s up", server.vxlan_name);
 		return -1;
 	}
 	return 0;

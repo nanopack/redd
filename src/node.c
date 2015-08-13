@@ -26,6 +26,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <uv.h>
 
 #include "node.h"
 #include "util/adlist.h"
@@ -63,7 +64,7 @@ void add_vtep_node(char *hostname)
 {
 	vtep_node_t *vtep_node = malloc(sizeof(vtep_node_t));
 	vtep_node->hostname = strdup(hostname);
-	vtep_node->send_addr = uv_ip4_addr(vtep_node->hostname, VTEP_DEFAULT_UDP_PORT);
+	vtep_node->send_addr = uv_ip4_addr(vtep_node->hostname, VTEPD_DEFAULT_UDP_PORT);
 	listAddNodeTail(server.nodes, (void *)vtep_node);
 }
 
@@ -72,7 +73,7 @@ void remove_vtep_node(char *hostname)
 	vtep_node_t key;
 	listNode *node;
 	key.hostname = hostname;
-	node = listSearchKey(server.nodes, &key)
+	node = listSearchKey(server.nodes, &key);
 	if (node)
-		listDelNode(server.nodes, node)
+		listDelNode(server.nodes, node);
 }

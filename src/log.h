@@ -28,13 +28,13 @@
 #define LOG_H
 
 /* Log levels */
-#define VTEP_DEBUG				0
-#define VTEP_VERBOSE			1
-#define VTEP_NOTICE				2
-#define VTEP_WARNING			3
-#define VTEP_LOG_RAW			(1<<10)	/* Modifier to log without timestamp */
-#define VTEP_DEFAULT_VERBOSITY	VTEP_NOTICE
-#define VTEP_MAX_LOGMSG_LEN		1024	/* Default maximum length of syslog messages */
+#define VTEPD_DEBUG				0
+#define VTEPD_VERBOSE			1
+#define VTEPD_NOTICE				2
+#define VTEPD_WARNING			3
+#define VTEPD_LOG_RAW			(1<<10)	/* Modifier to log without timestamp */
+#define VTEPD_DEFAULT_VERBOSITY	VTEPD_NOTICE
+#define VTEPD_MAX_LOGMSG_LEN		1024	/* Default maximum length of syslog messages */
 
 #ifdef __GNUC__
 void	vtep_log(int level, const char *fmt, ...) __attribute__((format(printf, 2, 3)));

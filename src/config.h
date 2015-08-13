@@ -23,8 +23,8 @@
 /*
  * Copyright 2013 Pagoda Box, Inc.  All rights reserved.
  */
-#ifndef VTEP_CONFIG_H
-#define VTEP_CONFIG_H
+#ifndef VTEPD_CONFIG_H
+#define VTEPD_CONFIG_H
 
 void	init_server_config(void);
 void	load_server_config(char *filename, char *options);

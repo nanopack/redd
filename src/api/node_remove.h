@@ -24,8 +24,8 @@
  * Copyright 2013 Pagoda Box, Inc.  All rights reserved.
  */
 
-#ifndef VTEP_API_NODE_REMOVE_H
-#define VTEP_API_NODE_REMOVE_H
+#ifndef VTEPD_API_NODE_REMOVE_H
+#define VTEPD_API_NODE_REMOVE_H
 
 #include <msgxchng.h>
 

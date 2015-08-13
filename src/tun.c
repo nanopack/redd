@@ -41,19 +41,19 @@ tun_read_each(void* data, async_io_buf_t* elem){
 	buf.buf = elem->buf;
 	buf.maxlen = elem->maxlen;
 	buf.len = elem->maxlen;
-	// vtep_log(VTEP_DEBUG, "Device %i is reading into %p which has %i bytes available", tun->async_io.fd, elem, elem->maxlen);
+	// vtep_log(VTEPD_DEBUG, "Device %i is reading into %p which has %i bytes available", tun->async_io.fd, elem, elem->maxlen);
 	retval = getmsg(tun->async_io.read_io.fd, NULL, &buf, &flags);
 	if (retval < 0) {
 		// we need to find out why errno is 0 sometimes
 		if (errno == EAGAIN || errno == EWOULDBLOCK) {
 			return 0;
 		}
-		// vtep_log(VTEP_DEBUG, "Device %i returned %i", tun->fd, retval);
-		// vtep_log(VTEP_WARNING, "FATAL ERROR: getmsg returned (%d) - (%d) %s", retval, errno, strerror(errno));
+		// vtep_log(VTEPD_DEBUG, "Device %i returned %i", tun->fd, retval);
+		// vtep_log(VTEPD_WARNING, "FATAL ERROR: getmsg returned (%d) - (%d) %s", retval, errno, strerror(errno));
 		return 0;
 	}
 	elem->len = buf.len;
-	// vtep_log(VTEP_DEBUG, "Device %i has more? %i cntl: %i data: %i", tun->fd, retval,MORECTL,MOREDATA);
+	// vtep_log(VTEPD_DEBUG, "Device %i has more? %i cntl: %i data: %i", tun->fd, retval,MORECTL,MOREDATA);
 	return 1;
 }
 
@@ -62,7 +62,7 @@ tun_read_done(void* data, async_io_buf_t* elem){
 	vtep_tun_t *tun = (vtep_tun_t *)data;
 	server.tun_recv_count++;
 	server.tun_recv_amount += elem->len;
-	// vtep_log(VTEP_DEBUG, "Sending message");
+	// vtep_log(VTEPD_DEBUG, "Sending message");
 	handle_local_frame(elem->buf, elem->len);
 }
 
@@ -80,18 +80,18 @@ tun_write_each(void* data, async_io_buf_t* elem){
 	buf.buf = elem->buf;
 	buf.maxlen = elem->maxlen;
 	buf.len = elem->len;
-	// vtep_log(VTEP_DEBUG, "Device %i is writing into %p which has %i bytes available", tun->async_io.fd, elem, elem->len);
+	// vtep_log(VTEPD_DEBUG, "Device %i is writing into %p which has %i bytes available", tun->async_io.fd, elem, elem->len);
 	retval = putmsg(tun->async_io.write_io.fd, NULL, &buf, 0);
 	if (retval < 0) {
 		// we need to find out why errno is 0 sometimes
 		if (errno == EAGAIN || errno == EWOULDBLOCK) {
 			return 0;
 		}
-		// vtep_log(VTEP_DEBUG, "Device %i returned %i", tun->fd, retval);
-		// vtep_log(VTEP_WARNING, "FATAL ERROR: putmsg (%d) %s", errno, strerror(errno));
+		// vtep_log(VTEPD_DEBUG, "Device %i returned %i", tun->fd, retval);
+		// vtep_log(VTEPD_WARNING, "FATAL ERROR: putmsg (%d) %s", errno, strerror(errno));
 		return 0;
 	}
-	// vtep_log(VTEP_DEBUG, "Device %i has more? %i cntl: %i data: %i", tun->fd, retval,MORECTL,MOREDATA);
+	// vtep_log(VTEPD_DEBUG, "Device %i has more? %i cntl: %i data: %i", tun->fd, retval,MORECTL,MOREDATA);
 	return 1;
 }
 

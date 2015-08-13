@@ -24,8 +24,8 @@
  * Copyright 2013 Pagoda Box, Inc.  All rights reserved.
  */
 
-#ifndef VTEP_API_PING_H
-#define VTEP_API_PING_H
+#ifndef VTEPD_API_PING_H
+#define VTEPD_API_PING_H
 
 #include <msgxchng.h>
 

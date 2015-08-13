@@ -191,7 +191,7 @@ reply_success(api_client_t *client, msgxchng_request_t *req)
 static void
 handle_unknown_command(api_client_t *client, msgxchng_request_t *req)
 {
-	vtep_log(VTEP_DEBUG, "unknown command: %s", req->command);
+	vtep_log(VTEPD_DEBUG, "unknown command: %s", req->command);
 }
 
 static void
@@ -274,11 +274,11 @@ static void
 on_connect(uv_stream_t* listener, int status)
 {
 	if (status == -1) {
-		vtep_log(VTEP_WARNING, "connect attempt failed");
+		vtep_log(VTEPD_WARNING, "connect attempt failed");
 		return;
 	}
 
-	vtep_log(VTEP_DEBUG, "connection established");
+	vtep_log(VTEPD_DEBUG, "connection established");
 
 	uv_tcp_t *proto = (uv_tcp_t *) malloc(sizeof(uv_tcp_t));
 	if (uv_tcp_init(server.loop, proto) == UV_OK) {
@@ -288,7 +288,7 @@ on_connect(uv_stream_t* listener, int status)
 
 		if (!((uv_accept(listener, client->stream) == UV_OK) &&
 				(uv_read_start(client->stream, read_alloc_buffer, on_read) == UV_OK))) {
-			vtep_log(VTEP_WARNING, "WARNING: Need to free data here, memory leaks ahoy!");
+			vtep_log(VTEPD_WARNING, "WARNING: Need to free data here, memory leaks ahoy!");
 		}
 	}
 
@@ -305,9 +305,9 @@ on_connect(uv_stream_t* listener, int status)
  * contains no specific addresses to bind, this function will try to
  * bind * (all addresses) for both the IPv4 and IPv6 protocols.
  *
- * On success the function returns VTEP_OK.
+ * On success the function returns VTEPD_OK.
  *
- * On error the function returns VTEP_ERR. For the function to be on
+ * On error the function returns VTEPD_ERR. For the function to be on
  * error, at least one of the server.bindaddr addresses was
  * impossible to bind, or no bind addresses were specified in the server
  * configuration but the function is not able to bind * for at least
@@ -373,28 +373,28 @@ listen_to_port(int port, uv_tcp_t *fds[], int *count)
 			}
 		}
 		if (fds[*count] == NULL) {
-			vtep_log(VTEP_WARNING,
+			vtep_log(VTEPD_WARNING,
 				"Creating Server TCP listening socket %s:%d: %s (%s)",
 				server.bindaddr[j] ? server.bindaddr[j] : "*",
 				server.port, uv_strerror(uv_last_error(server.loop)),
 				uv_err_name(uv_last_error(server.loop)));
-			return VTEP_ERR;
+			return VTEPD_ERR;
 		}
 		(*count)++;
 	}
-	return VTEP_OK;
+	return VTEPD_OK;
 }
 
 void
 init_api(void)
 {
 	/* Open the TCP listening socket for the user commands. */
-	if (listen_to_port(server.port, server.ipfd, &server.ipfd_count) == VTEP_ERR)
+	if (listen_to_port(server.port, server.ipfd, &server.ipfd_count) == VTEPD_ERR)
 		exit(1);
 
 	/* Abort if there are no listening sockets at all. */
 	if (server.ipfd_count == 0) {
-		vtep_log(VTEP_WARNING, "Configured to not listen anywhere, exiting.");
+		vtep_log(VTEPD_WARNING, "Configured to not listen anywhere, exiting.");
 		exit(1);
 	}
 }

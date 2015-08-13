@@ -43,7 +43,7 @@ vtep_log_raw(int level, const char *msg)
 	const char *c = ".-*#";
 	FILE *fp;
 	char buf[64];
-	int rawmode = (level & VTEP_LOG_RAW);
+	int rawmode = (level & VTEPD_LOG_RAW);
 	int log_to_stdout = server.logfile[0] == '\0';
 
 	level &= 0xff; /* clear flags */
@@ -76,7 +76,7 @@ void
 vtep_log(int level, const char *fmt, ...)
 {
 	va_list ap;
-	char msg[VTEP_MAX_LOGMSG_LEN];
+	char msg[VTEPD_MAX_LOGMSG_LEN];
 
 	if ((level&0xff) < server.verbosity) return;
 

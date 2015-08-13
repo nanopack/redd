@@ -24,8 +24,8 @@
  * Copyright 2013 Pagoda Box, Inc.  All rights reserved.
  */
 
-#ifndef VTEP_H
-#define VTEP_H
+#ifndef VTEPD_H
+#define VTEPD_H
 
 #include <uv.h>
 
@@ -35,38 +35,38 @@
 #include "route.h"
 
 // todo: move this to autobuild
-#define VTEP_VERSION 	"0.0.1"
+#define VTEPD_VERSION 	"0.0.1"
 
 /* Error codes */
-#define VTEP_OK		0
-#define VTEP_ERR	-1
+#define VTEPD_OK		0
+#define VTEPD_ERR	-1
 
 /* Limits */
-#define VTEP_CONFIGLINE_MAX		1024
-#define VTEP_MAX_LOGMSG_LEN		1024	/* Default maximum length of syslog messages */
-#define VTEP_BINDADDR_MAX		16
+#define VTEPD_CONFIGLINE_MAX		1024
+#define VTEPD_MAX_LOGMSG_LEN		1024	/* Default maximum length of syslog messages */
+#define VTEPD_BINDADDR_MAX		16
 
 /* Sensible defaults */
-#define VTEP_DEFAULT_PID_FILE			 "/var/run/vtep.pid"
-#define VTEP_DEFAULT_DAEMONIZE			 0
-#define VTEP_DEFAULT_LOGFILE			 ""
-#define VTEP_DEFAULT_SYSLOG_IDENT		 "vtep"
-#define VTEP_DEFAULT_SERVERPORT			 4470	/* TCP port */
-#define VTEP_DEFAULT_MAXIDLETIME		 0	/* default client timeout: infinite */
-#define VTEP_DEFAULT_MAX_CLIENTS		 10000
-#define VTEP_DEFAULT_TCP_KEEPALIVE		 0
-#define VTEP_DEFAULT_SYSLOG_ENABLED		 0
-#define VTEP_DEFAULT_TOWER_ADDR			 "127.0.0.1"
-#define VTEP_DEFAULT_TOWER_PORT			 5610
-#define VTEP_DEFAULT_SAVE_PATH 			 "/var/db/vtep/"
-#define VTEP_DEFAULT_CONNECT_RETRY_DELAY 60000
-#define VTEP_DEFAULT_ROUTING_ENABLED     1
-#define VTEP_DEFAULT_UDP_PORT            4789
-#define VTEP_DEFAULT_DEVICE_CHUNKSIZE    65536
-#define VTEP_DEFAULT_DEVICE_BUF_SECONDS  0
-#define VTEP_DEFAULT_DEVICE_BUF_USECONDS 1000
-#define VTEP_DEFAULT_UDP_RECV_BUF        114688
-#define VTEP_DEFAULT_UDP_SEND_BUF        114688
+#define VTEPD_DEFAULT_PID_FILE			 "/var/run/vtep.pid"
+#define VTEPD_DEFAULT_DAEMONIZE			 0
+#define VTEPD_DEFAULT_LOGFILE			 ""
+#define VTEPD_DEFAULT_SYSLOG_IDENT		 "vtep"
+#define VTEPD_DEFAULT_SERVERPORT			 4470	/* TCP port */
+#define VTEPD_DEFAULT_MAXIDLETIME		 0	/* default client timeout: infinite */
+#define VTEPD_DEFAULT_MAX_CLIENTS		 10000
+#define VTEPD_DEFAULT_TCP_KEEPALIVE		 0
+#define VTEPD_DEFAULT_SYSLOG_ENABLED		 0
+#define VTEPD_DEFAULT_TOWER_ADDR			 "127.0.0.1"
+#define VTEPD_DEFAULT_TOWER_PORT			 5610
+#define VTEPD_DEFAULT_SAVE_PATH 			 "/var/db/vtep/"
+#define VTEPD_DEFAULT_CONNECT_RETRY_DELAY 60000
+#define VTEPD_DEFAULT_ROUTING_ENABLED     1
+#define VTEPD_DEFAULT_UDP_PORT            4789
+#define VTEPD_DEFAULT_DEVICE_CHUNKSIZE    65536
+#define VTEPD_DEFAULT_DEVICE_BUF_SECONDS  0
+#define VTEPD_DEFAULT_DEVICE_BUF_USECONDS 1000
+#define VTEPD_DEFAULT_UDP_RECV_BUF        114688
+#define VTEPD_DEFAULT_UDP_SEND_BUF        114688
 
 typedef struct vtep_server_s {
 	/* General */
@@ -102,9 +102,9 @@ typedef struct vtep_server_s {
 
 	/* Networking */
 	int					port;							/* TCP listening port */
-	char				*bindaddr[VTEP_BINDADDR_MAX];	/* Addresses we should bind to */
+	char				*bindaddr[VTEPD_BINDADDR_MAX];	/* Addresses we should bind to */
 	int					bindaddr_count;					/* Number of addresses in server.bindaddr[] */
-	uv_tcp_t			*ipfd[VTEP_BINDADDR_MAX];		/* TCP socket file descriptors */
+	uv_tcp_t			*ipfd[VTEPD_BINDADDR_MAX];		/* TCP socket file descriptors */
 	int					ipfd_count;						/* Used slots in ipfd[] */
 	int					maxidletime;					/* Client timeout in seconds */
 	int					routing_enabled;				/* enable actual routing */

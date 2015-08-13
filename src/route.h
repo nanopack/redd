@@ -25,8 +25,8 @@
  */
  
 
-#ifndef VTEP_ROUTE_H
-#define VTEP_ROUTE_H
+#ifndef VTEPD_ROUTE_H
+#define VTEPD_ROUTE_H
 
 void handle_local_frame(char *frame, int len);
 void routing_init();

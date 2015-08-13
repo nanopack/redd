@@ -77,10 +77,10 @@ static void
 stats_report(uv_timer_t* handle, int status)
 {
 	double every_time = server.dump_stats_every/1000;
-	vtep_log(VTEP_DEBUG,"UDP stats:");
-	vtep_log(VTEP_DEBUG,"  packets in: %d out: %d",server.udp_recv_count,server.udp_send_count);
-	vtep_log(VTEP_DEBUG,"  data in: %s out: %s",human_readable(server.udp_recv_amount,1),human_readable(server.udp_send_amount,1));
-	vtep_log(VTEP_DEBUG,"  throughput in: %s/s out: %s/s",human_readable(server.udp_recv_amount*8/every_time,0),human_readable(server.udp_send_amount*8/every_time,0));
+	vtep_log(VTEPD_DEBUG,"UDP stats:");
+	vtep_log(VTEPD_DEBUG,"  packets in: %d out: %d",server.udp_recv_count,server.udp_send_count);
+	vtep_log(VTEPD_DEBUG,"  data in: %s out: %s",human_readable(server.udp_recv_amount,1),human_readable(server.udp_send_amount,1));
+	vtep_log(VTEPD_DEBUG,"  throughput in: %s/s out: %s/s",human_readable(server.udp_recv_amount*8/every_time,0),human_readable(server.udp_send_amount*8/every_time,0));
 
 	server.udp_send_count = 0;
 	server.udp_send_amount = 0;
@@ -121,7 +121,7 @@ daemonize(void)
 static void
 version(void)
 {
-	printf("VTEP server v%s\n", VTEP_VERSION);
+	printf("VTEP server v%s\n", VTEPD_VERSION);
 	exit(0);
 }
 
@@ -217,7 +217,7 @@ main(int argc, char **argv)
 		if (configfile)
 			server.configfile = getAbsolutePath(configfile);
 	} else {
-		vtep_log(VTEP_WARNING, "Warning: no config file specified, using the default config. In order to specify a config file use %s /path/to/vtep.conf", argv[0]);
+		vtep_log(VTEPD_WARNING, "Warning: no config file specified, using the default config. In order to specify a config file use %s /path/to/vtep.conf", argv[0]);
 	}
 	if (server.daemonize) daemonize();
 	init_server();
@@ -229,10 +229,10 @@ main(int argc, char **argv)
 	if (server.daemonize) create_pidfile();
 	vtep_set_proc_title(argv[0]);
 
-	vtep_log(VTEP_WARNING, "Server started, VTEP version " VTEP_VERSION);
+	vtep_log(VTEPD_WARNING, "Server started, VTEP version " VTEPD_VERSION);
 
 	if (server.ipfd_count > 0)
-		vtep_log(VTEP_NOTICE, "The server is now ready to accept connections on port %d", server.port);
+		vtep_log(VTEPD_NOTICE, "The server is now ready to accept connections on port %d", server.port);
 
 	return uv_run(server.loop, UV_RUN_DEFAULT);
 }

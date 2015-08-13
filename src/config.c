@@ -102,10 +102,10 @@ load_server_config_from_string(char *config)
 				err = "argument must be 'yes' or 'no'"; goto loaderr;
 			}
 		} else if (!strcasecmp(argv[0],"loglevel") && argc == 2) {
-			if (!strcasecmp(argv[1],"debug")) server.verbosity = VTEP_DEBUG;
-			else if (!strcasecmp(argv[1],"verbose")) server.verbosity = VTEP_VERBOSE;
-			else if (!strcasecmp(argv[1],"notice")) server.verbosity = VTEP_NOTICE;
-			else if (!strcasecmp(argv[1],"warning")) server.verbosity = VTEP_WARNING;
+			if (!strcasecmp(argv[1],"debug")) server.verbosity = VTEPD_DEBUG;
+			else if (!strcasecmp(argv[1],"verbose")) server.verbosity = VTEPD_VERBOSE;
+			else if (!strcasecmp(argv[1],"notice")) server.verbosity = VTEPD_NOTICE;
+			else if (!strcasecmp(argv[1],"warning")) server.verbosity = VTEPD_WARNING;
 			else {
 				err = "Invalid log level. Must be one of debug, notice, warning";
 				goto loaderr;
@@ -155,7 +155,7 @@ load_server_config_from_string(char *config)
 		} else if (!strcasecmp(argv[0],"bind") && argc >= 2) {
 			int j, addresses = argc-1;
 
-			if (addresses > VTEP_BINDADDR_MAX) {
+			if (addresses > VTEPD_BINDADDR_MAX) {
 				err = "Too many bind addresses specified"; goto loaderr;
 			}
 			for (j = 0; j < addresses; j++) {
@@ -205,24 +205,24 @@ init_server_config(void)
 {
 	/* General */
 	server.configfile			= NULL;
-	server.pidfile				= strdup(VTEP_DEFAULT_PID_FILE);
-	server.daemonize			= VTEP_DEFAULT_DAEMONIZE;
+	server.pidfile				= strdup(VTEPD_DEFAULT_PID_FILE);
+	server.daemonize			= VTEPD_DEFAULT_DAEMONIZE;
 
 	/* Logging */
-	server.verbosity			= VTEP_DEFAULT_VERBOSITY;
-	server.logfile				= strdup(VTEP_DEFAULT_LOGFILE);
-	server.syslog_enabled		= VTEP_DEFAULT_SYSLOG_ENABLED;
-	server.syslog_ident			= strdup(VTEP_DEFAULT_SYSLOG_IDENT);
+	server.verbosity			= VTEPD_DEFAULT_VERBOSITY;
+	server.logfile				= strdup(VTEPD_DEFAULT_LOGFILE);
+	server.syslog_enabled		= VTEPD_DEFAULT_SYSLOG_ENABLED;
+	server.syslog_ident			= strdup(VTEPD_DEFAULT_SYSLOG_IDENT);
 	server.syslog_facility		= LOG_LOCAL0;
 
 	/* Networking */
-	server.port					= VTEP_DEFAULT_SERVERPORT;
+	server.port					= VTEPD_DEFAULT_SERVERPORT;
 	server.ipfd_count			= 0;
-	server.maxidletime			= VTEP_DEFAULT_MAXIDLETIME;
-	server.routing_enabled		= VTEP_DEFAULT_ROUTING_ENABLED;
+	server.maxidletime			= VTEPD_DEFAULT_MAXIDLETIME;
+	server.routing_enabled		= VTEPD_DEFAULT_ROUTING_ENABLED;
 	server.udp_listen_address	= strdup("localhost");
-	server.udp_recv_buf			= VTEP_DEFAULT_UDP_RECV_BUF;
-	server.udp_send_buf			= VTEP_DEFAULT_UDP_SEND_BUF;
+	server.udp_recv_buf			= VTEPD_DEFAULT_UDP_RECV_BUF;
+	server.udp_send_buf			= VTEPD_DEFAULT_UDP_SEND_BUF;
 
 	/* Database */
 	server.nodes				= listCreate();
@@ -242,7 +242,7 @@ init_server_config(void)
 	server.vxlan_interface		= strdup("eth0");
 
 	/* Save */
-	server.save_path			= strdup(VTEP_DEFAULT_SAVE_PATH);
+	server.save_path			= strdup(VTEPD_DEFAULT_SAVE_PATH);
 }
 
 /* Load the server configuration from the specified filename.
@@ -256,7 +256,7 @@ void
 load_server_config(char *filename, char *options)
 {
 	sds config = sdsempty();
-	char buf[VTEP_CONFIGLINE_MAX+1];
+	char buf[VTEPD_CONFIGLINE_MAX+1];
 
 	/* Load the file content */
 	if (filename) {
@@ -266,12 +266,12 @@ load_server_config(char *filename, char *options)
 			fp = stdin;
 		} else {
 			if ((fp = fopen(filename,"r")) == NULL) {
-				vtep_log(VTEP_WARNING,
+				vtep_log(VTEPD_WARNING,
 					"Fatal error, can't open config file '%s'", filename);
 				exit(1);
 			}
 		}
-		while(fgets(buf,VTEP_CONFIGLINE_MAX+1,fp) != NULL)
+		while(fgets(buf,VTEPD_CONFIGLINE_MAX+1,fp) != NULL)
 			config = sdscat(config,buf);
 		if (fp != stdin) fclose(fp);
 	}

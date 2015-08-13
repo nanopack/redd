@@ -24,8 +24,8 @@
  * Copyright 2013 Pagoda Box, Inc.  All rights reserved.
  */
 
-#ifndef VTEP_NODE_H
-#define VTEP_NODE_H
+#ifndef VTEPD_NODE_H
+#define VTEPD_NODE_H
 
 #include <netinet/in.h>
 

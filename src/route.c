@@ -50,7 +50,7 @@ send_to_vtep(vtep_node_t *vtep, char *frame, int len)
 	if (buf == NULL)
 		return;
 	if (len > buf->maxlen) {
-		vtep_log(VTEP_DEBUG, "packet is larger than buffer");
+		vtep_log(VTEPD_DEBUG, "packet is larger than buffer");
 		return;
 	}
 
@@ -80,7 +80,7 @@ handle_local_frame(char *frame, int len)
 	if ((ip_header->ihl * 4) + udp_header->len == len) {
 		do_broadcast(frame + (header->ihl * 4) + sizeof(struct udphdr), len - (header->ihl * 4) - sizeof(struct(udphdr)));
 	} else {
-		vtep_log(VTEP_DEBUG, "lengths didn't add up");
+		vtep_log(VTEPD_DEBUG, "lengths didn't add up");
 	}
 }
 

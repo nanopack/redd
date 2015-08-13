@@ -24,8 +24,8 @@
  * Copyright 2013 Pagoda Box, Inc.  All rights reserved.
  */
 
-#ifndef VTEP_VXLAN_H
-#define VTEP_VXLAN_H
+#ifndef VTEPD_VXLAN_H
+#define VTEPD_VXLAN_H
 
 void *dup_ip(void *ptr);
 void free_ip(void *ptr);
