@@ -30,7 +30,6 @@
 #include <uv.h>
 #include <bframe.h>
 #include <msgxchng.h>
-#include <sys/ethernet.h>
 
 typedef struct {
 	uv_stream_t 		*stream;

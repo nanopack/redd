@@ -28,7 +28,6 @@
 #define VTEP_ASYNC_IO_H
 
 #include <sys/types.h>
-#include <sys/ethernet.h>
 #include <sys/socket.h>
 #include <uv.h>
 
