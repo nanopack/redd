@@ -24,6 +24,13 @@
  * Copyright 2013 Pagoda Box, Inc.  All rights reserved.
  */
 
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <uv.h>
+
+#include "udp.h"
+
 static int
 udp_set_nonblock(int fd)
 {

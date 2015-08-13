@@ -30,7 +30,6 @@
 #include <stdlib.h>			/* standard library definitions */
 #include <string.h>
 #include <syslog.h>			/* definitions for system error logging */
-#include <sys/ethernet.h>
 #include <unistd.h>			/* standard symbolic constants and types */
 #include <uv.h>
 

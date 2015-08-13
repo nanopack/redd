@@ -29,7 +29,6 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <sys/types.h>
-#include <sys/ethernet.h>
 #include <sys/socket.h>
 
 #include "api.h"
