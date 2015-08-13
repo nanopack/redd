@@ -78,7 +78,7 @@ handle_local_frame(char *frame, int len)
 	struct iphdr *ip_header = (struct iphdr *)frame;
 	struct udphdr *udp_header = (struct udphdr *)frame + (ip_header->ihl * 4);
 	if ((ip_header->ihl * 4) + udp_header->len == len) {
-		do_broadcast(frame + (header->ihl * 4) + sizeof(struct udphdr), len - (header->ihl * 4) - sizeof(struct(udphdr)));
+		do_broadcast(frame + (ip_header->ihl * 4) + sizeof(struct udphdr), len - (ip_header->ihl * 4) - sizeof(struct(udphdr)));
 	} else {
 		vtep_log(VTEPD_DEBUG, "lengths didn't add up");
 	}
