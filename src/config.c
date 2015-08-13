@@ -30,7 +30,6 @@
 #include <string.h>	/* string operations */
 #include <syslog.h>	/* definitions for system error logging */
 
-#include "ip.h"
 #include "node.h"
 #include "vtepd.h"
 #include "vxlan.h"
