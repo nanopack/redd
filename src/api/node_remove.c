@@ -69,11 +69,8 @@ handle_node_remove(api_client_t *client, msgxchng_request_t *req)
 
 	host = parse_data(req->data, req->data_len);
 	if (validate_host(host)) {
-		if (remove_vtep_node(host) == 0) {
-			reply_success(client, req);
-		} else {
-			reply_error(client, req, "There was an error trying to remove the node");
-		}
+		remove_vtep_node(host);
+		reply_success(client, req);
 	} else {
 		reply_error(client, req, "There was an error validating the node");
 	}

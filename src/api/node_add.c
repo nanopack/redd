@@ -69,11 +69,8 @@ handle_node_add(api_client_t *client, msgxchng_request_t *req)
 
 	host = parse_data(req->data, req->data_len);
 	if (validate_host(host)) {
-		if (add_vtep_node(host) == 0) {
-			reply_success(client, req);
-		} else {
-			reply_error(client, req, "There was an error trying to add the node");
-		}
+		add_vtep_node(host);
+		reply_success(client, req);
 	} else {
 		reply_error(client, req, "There was an error validating the node");
 	}
