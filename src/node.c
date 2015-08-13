@@ -30,6 +30,7 @@
 
 #include "node.h"
 #include "util/adlist.h"
+#include "vtepd.h"
 
 void *dup_node(void *ptr)
 {
