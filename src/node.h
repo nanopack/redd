@@ -24,6 +24,11 @@
  * Copyright 2013 Pagoda Box, Inc.  All rights reserved.
  */
 
+#ifndef VTEP_NODE_H
+#define VTEP_NODE_H
+
+#include <netinet/in.h>
+
 typedef struct vtep_node_s {
 	char 				*hostname;
 	struct sockaddr_in	send_addr;
@@ -35,3 +40,5 @@ int match_node(void *ptr, void *key);
 
 void add_vtep_node(char *hostname);
 void remove_vtep_node(char *hostname);
+
+#endif
