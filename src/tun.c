@@ -27,10 +27,10 @@
 #include <netinet/ip.h>
 #include <linux/if.h>
 #include <linux/if_tun.h>
-#include <stropts.h>
 #include <string.h>
 #include <sys/ioctl.h>
 #include <errno.h>
+#include <unistd.h>
 
 #include "async_io.h"
 #include "util/cmd.h"
