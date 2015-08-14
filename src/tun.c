@@ -122,9 +122,13 @@ tun_init()
 	int flags = fcntl(fd, F_GETFL, 0);
 	fcntl(fd, F_SETFL, flags | O_NONBLOCK);
 
-	char *cmd[] = {"ip", "route", "add", "224.0.0.0/4", "dev", server.tun_name, 0};
+	char *link_up_cmd[] = {"ip", "link", "set", server.tun_name, "up", 0};
 
-	run_cmd(cmd);
+	run_cmd(link_up_cmd);
+
+	char *route_cmd[] = {"ip", "route", "add", "224.0.0.0/4", "dev", server.tun_name, 0};
+
+	run_cmd(route_cmd);
 
 	return async_io_init(&server.tun_async_io, fd, (void *)&server.tun_async_io,
 		2048, 16, tun_read_each, tun_read_done, tun_read_cb,
