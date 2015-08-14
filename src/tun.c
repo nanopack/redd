@@ -41,15 +41,9 @@
 static int 
 tun_read_each(void* data, async_io_buf_t* elem){
 	async_io_t *tun = (async_io_t *)data;
-	int retval;
-	int flags = 0;
-	struct strbuf buf;
-	buf.buf = elem->buf;
-	buf.maxlen = elem->maxlen;
-	buf.len = elem->maxlen;
 	// vtep_log(VTEPD_DEBUG, "Device %i is reading into %p which has %i bytes available", tun->fd, elem, elem->maxlen);
-	retval = getmsg(tun->read_io.fd, NULL, &buf, &flags);
-	if (retval < 0) {
+	elem->len = read(tun->read_io.fd, elem->buf, elem->maxlen);
+	if (elem->len < 0) {
 		// we need to find out why errno is 0 sometimes
 		if (errno == EAGAIN || errno == EWOULDBLOCK) {
 			return 0;
@@ -58,7 +52,6 @@ tun_read_each(void* data, async_io_buf_t* elem){
 		// vtep_log(VTEPD_WARNING, "FATAL ERROR: getmsg returned (%d) - (%d) %s", retval, errno, strerror(errno));
 		return 0;
 	}
-	elem->len = buf.len;
 	// vtep_log(VTEPD_DEBUG, "Device %i has more? %i cntl: %i data: %i", tun->fd, retval,MORECTL,MOREDATA);
 	return 1;
 }
@@ -79,13 +72,8 @@ static int
 tun_write_each(void* data, async_io_buf_t* elem){
 	async_io_t *tun = (async_io_t *)data;
 	int retval;
-	int flags = 0;
-	struct strbuf buf;
-	buf.buf = elem->buf;
-	buf.maxlen = elem->maxlen;
-	buf.len = elem->len;
 	// vtep_log(VTEPD_DEBUG, "Device %i is writing into %p which has %i bytes available", tun->fd, elem, elem->len);
-	retval = putmsg(tun->write_io.fd, NULL, &buf, 0);
+	retval = write(tun->write_io.fd, elem->buf, elem->len);
 	if (retval < 0) {
 		// we need to find out why errno is 0 sometimes
 		if (errno == EAGAIN || errno == EWOULDBLOCK) {
@@ -130,6 +118,9 @@ tun_init()
 
 	server.tun_name = strdup(ifr.ifr_name);
 	server.tun_fd = fd;
+
+	int flags = fcntl(fd, F_GETFL, 0);
+	fcntl(fd, F_SETFL, flags | O_NONBLOCK);
 
 	char *cmd[] = {"ip", "route", "add", "224.0.0.0/4", "dev", server.tun_name, 0};
 
