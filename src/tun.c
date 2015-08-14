@@ -30,6 +30,7 @@
 #include <stropts.h>
 #include <string.h>
 #include <sys/ioctl.h>
+#include <errno.h>
 
 #include "async_io.h"
 #include "util/cmd.h"
@@ -65,8 +66,6 @@ tun_read_each(void* data, async_io_buf_t* elem){
 static void 
 tun_read_done(void* data, async_io_buf_t* elem){
 	vtep_tun_t *tun = (vtep_tun_t *)data;
-	server.tun_recv_count++;
-	server.tun_recv_amount += elem->len;
 	// vtep_log(VTEPD_DEBUG, "Sending message");
 	handle_local_frame(elem->buf, elem->len);
 }
@@ -102,8 +101,6 @@ tun_write_each(void* data, async_io_buf_t* elem){
 
 static void 
 tun_write_done(void* data, async_io_buf_t* elem){
-	server.tun_send_count++;
-	server.tun_send_amount += elem->len;
 	vtep_tun_t *tun = (vtep_tun_t *)data;
 }
 
@@ -134,9 +131,11 @@ tun_init()
 	server.tun_name = strdup(ifr.ifrname);
 	server.tun_fd = fd;
 
-	run_cmd(["ip", "route", "add", "224.0.0.0/4", "dev", server.tun_name]);
+	char *cmd[] = {"ip", "route", "add", "224.0.0.0/4", "dev", server.tun_name, 0};
 
-	return async_io_init(&tun->async_io, fd, (void *)tun,
+	run_cmd(cmd);
+
+	return async_io_init(&server.tun_async_io, fd, (void *)tun,
 		2048, 16, tun_read_each, tun_read_done, tun_read_cb,
 		2048, 16, tun_write_each, tun_write_done, tun_write_cb);
 }

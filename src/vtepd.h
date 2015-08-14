@@ -78,6 +78,11 @@ typedef struct vtep_server_s {
 	int					udp_send_buf;					/* udp send buffer */
 	async_io_t			udp_async_io;
 
+	/* Tun */
+	char				*tun_name;
+	int					tun_fd;
+	async_io_t			tun_async_io;
+
 	/* Stats */
 	int					dump_stats_every;
 	int					udp_send_count;
