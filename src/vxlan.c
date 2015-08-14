@@ -94,9 +94,8 @@ vxlan_init()
 static int
 vxlan_has_ip(char *ip_address)
 {
-
 	char cmd[128];
-	sprintf(&cmd, "'ip addr show dev %s | grep %s'", server.vxlan_name, ip_address);
+	sprintf(&cmd, "ip addr show dev %s | grep %s", server.vxlan_name, ip_address);
 	char *bash_cmd[] = {"bash","-c", cmd, 0};
 	return run_cmd(bash_cmd);
 }

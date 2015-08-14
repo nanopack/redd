@@ -204,7 +204,7 @@ parse_request(api_client_t *client, bframe_t *frame)
 	if (!strcmp(req->command, "ping"))
 		handle_ping(client, req);
 	else if (!strcmp(req->command, "status"))
-		handle_ping(client, req);
+		handle_status(client, req);
 	else if (!strcmp(req->command, "ip.add"))
 		handle_ip_add(client, req);
 	else if (!strcmp(req->command, "ip.list"))
