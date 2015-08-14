@@ -27,6 +27,8 @@
 #include <sys/wait.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <errno.h>
+
 #include "cmd.h"
 
 int run_cmd(char* argv[])
