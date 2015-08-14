@@ -56,7 +56,8 @@ int match_ip(void *ptr, void *key)
 static int
 vxlan_exists()
 {
-	return run_cmd(["ip", "link", "show", server.vxlan_name]);
+	char *cmd[] = {"ip", "link", "show", server.vxlan_name, 0};
+	return run_cmd(cmd);
 }
 
 int
@@ -68,12 +69,14 @@ vxlan_init()
 	 *  ip link set vxlan0 up
 	 */
 	if (vxlan_exists != 0) {
-		if (run_cmd(["ip", "link", "add", server.vxlan_name, "type", "vxlan", "id", server.vxlan_vni, "group", server.vxlan_group, "dev", server.vxlan_interface]) != 0) {
+		char *add_link_cmd[] = {"ip", "link", "add", server.vxlan_name, "type", "vxlan", "id", server.vxlan_vni, "group", server.vxlan_group, "dev", server.vxlan_interface, 0};
+		if (run_cmd(add_link_cmd) != 0) {
 			vtep_log(VTEPD_WARNING, "Failed to create link %s", server.vxlan_name);
 			return -1;
 		}
 	}
-	if (run_cmd(["ip", "link", "set", server.vxlan_name, "up"]) != 0)
+	char *set_link_cmd[] = {"ip", "link", "set", server.vxlan_name, "up", 0};
+	if (run_cmd(set_link_cmd) != 0)
 	{
 		vtep_log(VTEPD_WARNING, "Failed to set link %s up", server.vxlan_name);
 		return -1;
@@ -84,9 +87,11 @@ vxlan_init()
 static int
 vxlan_has_ip(char *ip_address)
 {
+
 	char cmd[128];
 	sprintf(&cmd, "'ip addr show dev %s | grep %s'", server.vxlan_name, ip_address);
-	return run_cmd(["bash","-c", cmd]);
+	char *bash_cmd[] = {"bash","-c", cmd, 0};
+	return run_cmd(bash_cmd);
 }
 
 int
@@ -96,7 +101,8 @@ vxlan_add_ip(char *ip_address)
 	if (!vxlan_has_ip(ip_address)) {
 		char *ip = strdup(ip_address);
 		listAddNodeTail(server.vxlan_ips, (void *)ip);
-		ret = run_cmd(["ip", "addr", "add", ip_address, "dev", "vxlan0"]);
+		char *cmd[] = {"ip", "addr", "add", ip_address, "dev", server.vxlan_name, 0};
+		ret = run_cmd(cmd);
 	}
 	return ret;
 }
@@ -109,7 +115,8 @@ vxlan_remove_ip(char *ip_address)
 		listNode *node = listSearchKey(server.vxlan_ips, (void *)ip_address);
 		if (node)
 			listDelNode(server.vxlan_ips, node);
-		ret = run_cmd(["ip", "addr", "del", ip_address, "dev", "vxlan0"]);
+		char *cmd[] = {"ip", "addr", "del", ip_address, "dev", server.vxlan_name, 0};
+		ret = run_cmd(cmd);
 	}
 	return ret;
 }
