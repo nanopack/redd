@@ -223,8 +223,6 @@ main(int argc, char **argv)
 	init_server();
 	if (server.routing_enabled)
 		routing_init();
-	if (server.tower)
-		tower_init();
 	init_api();
 	if (server.daemonize) create_pidfile();
 	vtep_set_proc_title(argv[0]);
