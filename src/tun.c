@@ -40,15 +40,15 @@
 
 static int 
 tun_read_each(void* data, async_io_buf_t* elem){
-	vtep_tun_t *tun = (vtep_tun_t *)data;
+	async_io_t *tun = (async_io_t *)data;
 	int retval;
 	int flags = 0;
 	struct strbuf buf;
 	buf.buf = elem->buf;
 	buf.maxlen = elem->maxlen;
 	buf.len = elem->maxlen;
-	// vtep_log(VTEPD_DEBUG, "Device %i is reading into %p which has %i bytes available", tun->async_io.fd, elem, elem->maxlen);
-	retval = getmsg(tun->async_io.read_io.fd, NULL, &buf, &flags);
+	// vtep_log(VTEPD_DEBUG, "Device %i is reading into %p which has %i bytes available", tun->fd, elem, elem->maxlen);
+	retval = getmsg(tun->read_io.fd, NULL, &buf, &flags);
 	if (retval < 0) {
 		// we need to find out why errno is 0 sometimes
 		if (errno == EAGAIN || errno == EWOULDBLOCK) {
@@ -65,27 +65,27 @@ tun_read_each(void* data, async_io_buf_t* elem){
 
 static void 
 tun_read_done(void* data, async_io_buf_t* elem){
-	vtep_tun_t *tun = (vtep_tun_t *)data;
+	async_io_t *tun = (async_io_t *)data;
 	// vtep_log(VTEPD_DEBUG, "Sending message");
 	handle_local_frame(elem->buf, elem->len);
 }
 
 static void 
 tun_read_cb(void* data, int status){
-	vtep_tun_t *tun = (vtep_tun_t *)data;
+	async_io_t *tun = (async_io_t *)data;
 }
 
 static int 
 tun_write_each(void* data, async_io_buf_t* elem){
-	vtep_tun_t *tun = (vtep_tun_t *)data;
+	async_io_t *tun = (async_io_t *)data;
 	int retval;
 	int flags = 0;
 	struct strbuf buf;
 	buf.buf = elem->buf;
 	buf.maxlen = elem->maxlen;
 	buf.len = elem->len;
-	// vtep_log(VTEPD_DEBUG, "Device %i is writing into %p which has %i bytes available", tun->async_io.fd, elem, elem->len);
-	retval = putmsg(tun->async_io.write_io.fd, NULL, &buf, 0);
+	// vtep_log(VTEPD_DEBUG, "Device %i is writing into %p which has %i bytes available", tun->fd, elem, elem->len);
+	retval = putmsg(tun->write_io.fd, NULL, &buf, 0);
 	if (retval < 0) {
 		// we need to find out why errno is 0 sometimes
 		if (errno == EAGAIN || errno == EWOULDBLOCK) {
@@ -101,12 +101,12 @@ tun_write_each(void* data, async_io_buf_t* elem){
 
 static void 
 tun_write_done(void* data, async_io_buf_t* elem){
-	vtep_tun_t *tun = (vtep_tun_t *)data;
+	async_io_t *tun = (async_io_t *)data;
 }
 
 static void 
 tun_write_cb(void* data, int status){
-	vtep_tun_t *tun = (vtep_tun_t *)data;
+	async_io_t *tun = (async_io_t *)data;
 }
 
 int
@@ -135,7 +135,7 @@ tun_init()
 
 	run_cmd(cmd);
 
-	return async_io_init(&server.tun_async_io, fd, (void *)tun,
+	return async_io_init(&server.tun_async_io, fd, (void *)&server.tun_async_io,
 		2048, 16, tun_read_each, tun_read_done, tun_read_cb,
 		2048, 16, tun_write_each, tun_write_done, tun_write_cb);
 }

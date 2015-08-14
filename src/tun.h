@@ -26,11 +26,6 @@
 #ifndef TUN_H
 #define TUN_H
 
-typedef struct vtep_tun_s {
-	char 				*name;
-	async_io_t			async_io;
-} vtep_tun_t;
-
 int tun_init();
 
 #endif
