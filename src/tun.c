@@ -27,10 +27,15 @@
 #include <netinet/ip.h>
 #include <linux/if.h>
 #include <linux/if_tun.h>
+#include <stropts.h>
+#include <string.h>
+#include <sys/ioctl.h>
 
 #include "async_io.h"
 #include "util/cmd.h"
+#include "route.h"
 #include "tun.h"
+#include "vtepd.h"
 
 static int 
 tun_read_each(void* data, async_io_buf_t* elem){
