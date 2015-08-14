@@ -65,7 +65,7 @@ void add_vtep_node(char *hostname)
 {
 	vtep_node_t *vtep_node = malloc(sizeof(vtep_node_t));
 	vtep_node->hostname = strdup(hostname);
-	vtep_node->send_addr = uv_ip4_addr(vtep_node->hostname, VTEPD_DEFAULT_UDP_PORT);
+	vtep_node->send_addr = uv_ip4_addr(vtep_node->hostname, server.vxlan_port);
 	listAddNodeTail(server.nodes, (void *)vtep_node);
 }
 

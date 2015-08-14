@@ -97,6 +97,7 @@ udp_write_each(void* data, async_io_buf_t* elem)
 {
 	async_io_t *async_io = (async_io_t *)data;
 	int retval;
+	vtep_log(VTEPD_DEBUG, "Sending UDP packet");
 	retval = sendto(async_io->write_io.fd, elem->buf, elem->len, 0, (struct sockaddr *)&elem->addr, sizeof(elem->addr));
 	if (retval < 0)
 		return 0;
