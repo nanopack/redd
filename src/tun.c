@@ -128,7 +128,7 @@ tun_init()
 		return err;
 	}
 
-	server.tun_name = strdup(ifr.ifrname);
+	server.tun_name = strdup(ifr.ifr_name);
 	server.tun_fd = fd;
 
 	char *cmd[] = {"ip", "route", "add", "224.0.0.0/4", "dev", server.tun_name, 0};
