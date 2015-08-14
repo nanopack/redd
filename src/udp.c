@@ -30,6 +30,7 @@
 #include <uv.h>
 
 #include "async_io.h"
+#include "log.h"
 #include "udp.h"
 #include "vtepd.h"
 
