@@ -83,6 +83,16 @@ handle_local_frame(char *frame, int len)
 	if ((ip_header->ihl * 4) + udp_header->len == len) {
 		do_broadcast(frame + (ip_header->ihl * 4) + sizeof(struct udphdr), len - (ip_header->ihl * 4) - sizeof(struct udphdr));
 	} else {
+		printf("len: %d, ip_header: %d, udp_header: %d\n", len, ip_header->ihl, udphdr->len);
+		int i;
+		for (i = 0; i < len; i++) {
+			printf("%#02x", frame[i]);
+		}
+		printf("\n");
+		for (i = 0; i < len; i++) {
+			printf("%c", frame[i]);
+		}
+		printf("\n");
 		vtep_log(VTEPD_DEBUG, "lengths didn't add up");
 	}
 }

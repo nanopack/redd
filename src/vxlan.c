@@ -69,7 +69,7 @@ vxlan_init()
 	 *  ip link set vxlan0 up
 	 */
 	if (vxlan_exists != 0) {
-		char *add_link_cmd[] = {"ip", "link", "add", server.vxlan_name, "type", "vxlan", "id", server.vxlan_vni, "group", server.vxlan_group, "dev", server.vxlan_interface, 0};
+		char *add_link_cmd[] = {"ip", "link", "add", server.vxlan_name, "type", "vxlan", "id", server.vxlan_vni, "dev", server.vxlan_interface, 0};
 		if (run_cmd(add_link_cmd) != 0) {
 			vtep_log(VTEPD_WARNING, "Failed to create link %s", server.vxlan_name);
 			return -1;
@@ -81,6 +81,8 @@ vxlan_init()
 		vtep_log(VTEPD_WARNING, "Failed to set link %s up", server.vxlan_name);
 		return -1;
 	}
+
+	char *set_route_cmd[] = {"bridge", "fdb", "add", "to", "00:00:00:00:00:00", "dst", server.vxlan_group, "via", server.tun_name, "dev", server.vxlan_name, 0};
 	return 0;
 }
 
