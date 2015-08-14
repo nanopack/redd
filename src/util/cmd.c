@@ -44,7 +44,7 @@ int run_cmd(char* argv[])
 	}
 	do {
 		ret = waitpid(child, &status, 0);
-	} while ( ret == -1 && errno == EINTR)
+	} while ( ret == -1 && errno == EINTR);
 
 	return status;
 }
