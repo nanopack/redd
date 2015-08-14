@@ -80,7 +80,7 @@ handle_local_frame(char *frame, int len)
 {
 	struct iphdr *ip_header = (struct iphdr *)frame;
 	struct udphdr *udp_header = (struct udphdr *)(frame + (ip_header->ihl * 4));
-	if ((ip_header->ihl * 4) + udp_header->len == len) {
+	if ((ip_header->ihl * 4) + ntohs(udp_header->len) == len) {
 		do_broadcast(frame + (ip_header->ihl * 4) + sizeof(struct udphdr), len - (ip_header->ihl * 4) - sizeof(struct udphdr));
 	} else {
 		printf("len: %d, ip_header: %d, ip_header->len: %d, udp_header: %d\n", len, ip_header->ihl, ntohs(ip_header->tot_len), ntohs(udp_header->len));
