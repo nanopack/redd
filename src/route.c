@@ -83,7 +83,7 @@ handle_local_frame(char *frame, int len)
 	if ((ip_header->ihl * 4) + udp_header->len == len) {
 		do_broadcast(frame + (ip_header->ihl * 4) + sizeof(struct udphdr), len - (ip_header->ihl * 4) - sizeof(struct udphdr));
 	} else {
-		printf("len: %d, ip_header: %d, udp_header: %d\n", len, ip_header->ihl, udp_header->len);
+		printf("len: %d, ip_header: %d, ip_header->len: %d, udp_header: %d\n", len, ip_header->ihl, ip_header->tot_len, udp_header->len);
 		int i;
 		for (i = 0; i < len; i++) {
 			printf("%02x", frame[i]);
