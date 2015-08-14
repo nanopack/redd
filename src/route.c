@@ -86,7 +86,7 @@ handle_local_frame(char *frame, int len)
 		printf("len: %d, ip_header: %d, udp_header: %d\n", len, ip_header->ihl, udp_header->len);
 		int i;
 		for (i = 0; i < len; i++) {
-			printf("%#02x", frame[i]);
+			printf("%02x", frame[i]);
 		}
 		printf("\n");
 		for (i = 0; i < len; i++) {

@@ -83,6 +83,11 @@ vxlan_init()
 	}
 
 	char *set_route_cmd[] = {"bridge", "fdb", "add", "to", "00:00:00:00:00:00", "dst", server.vxlan_group, "via", server.tun_name, "dev", server.vxlan_name, 0};
+	if (run_cmd(set_route_cmd) != 0)
+	{
+		vtep_log(VTEPD_WARNING, "Failed to set route %s", server.vxlan_name);
+		return -1;
+	}
 	return 0;
 }
 
