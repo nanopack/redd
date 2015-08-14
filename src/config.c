@@ -181,6 +181,21 @@ load_server_config_from_string(char *config)
 		} else if (!strcasecmp(argv[0],"save-path") && argc == 2) {
 			free(server.save_path);
 			server.save_path = strdup(argv[1]);
+		} else if (!strcasecmp(argv[0],"vxlan-name") && argc == 2) {
+			free(server.vxlan_name);
+			server.vxlan_name = strdup(argv[1]);
+		} else if (!strcasecmp(argv[0],"vxlan-vni") && argc == 2) {
+			free(server.vxlan_vni);
+			server.vxlan_vni = strdup(argv[1]);
+		} else if (!strcasecmp(argv[0],"vxlan-group") && argc == 2) {
+			free(server.vxlan_group);
+			server.vxlan_group = strdup(argv[1]);
+		} else if (!strcasecmp(argv[0],"vxlan-port") && argc == 2) {
+			free(server.vxlan_port);
+			server.vxlan_port = strdup(argv[1]);
+		} else if (!strcasecmp(argv[0],"vxlan-interface") && argc == 2) {
+			free(server.vxlan_interface);
+			server.vxlan_interface = strdup(argv[1]);
 		} else if (!strcasecmp(argv[0], "dump-stats-every") && argc == 2) {
 			server.dump_stats_every = atoi(argv[1]) * 1000;
 		} else {
@@ -238,8 +253,8 @@ init_server_config(void)
 	server.vxlan_name			= strdup("vxlan0");
 	server.vxlan_vni			= strdup("1");
 	server.vxlan_group			= strdup("239.0.0.1");
-	server.vxlan_port			= strdup("4789");
-	server.vxlan_interface		= strdup("eth0");
+	server.vxlan_port			= strdup("8472");
+	server.vxlan_interface		= strdup("eth1");
 
 	/* Save */
 	server.save_path			= strdup(VTEPD_DEFAULT_SAVE_PATH);
