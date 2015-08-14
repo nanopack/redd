@@ -29,7 +29,9 @@
 #include <stdio.h>
 #include <uv.h>
 
+#include "async_io.h"
 #include "udp.h"
+#include "vtepd.h"
 
 static int
 udp_set_nonblock(int fd)
