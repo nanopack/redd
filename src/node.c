@@ -75,7 +75,6 @@ pack_nodes(msgpack_packer *packer)
 	listIter *iterator	= listGetIterator(server.nodes, AL_START_HEAD);
 	listNode *list_node	= NULL;
 	vtep_node_t *node = NULL;
-	msgpack_pack_map(packer, 1);
 	msgpack_pack_raw(packer, 12);
 	msgpack_pack_raw_body(packer, "nodes", 5);
 	msgpack_pack_array(packer, listLength(server.nodes));

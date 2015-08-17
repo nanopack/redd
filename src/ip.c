@@ -76,7 +76,6 @@ pack_ips(msgpack_packer *packer)
 	listIter *iterator	= listGetIterator(server.ips, AL_START_HEAD);
 	listNode *list_node	= NULL;
 	vtep_ip_t *ip = NULL;
-	msgpack_pack_map(packer, 1);
 	msgpack_pack_raw(packer, 12);
 	msgpack_pack_raw_body(packer, "ip_addresses", 12);
 	msgpack_pack_array(packer, listLength(server.ips));

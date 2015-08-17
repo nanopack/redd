@@ -46,7 +46,7 @@ static char
 	msgpack_sbuffer_init(buffer);
 
 	packer = msgpack_packer_new((void *)buffer, msgpack_sbuffer_write);
-
+	msgpack_pack_map(packer, 8);
 	pack_nodes(packer);
 	pack_ips(packer);
 	msgpack_pack_key_value(packer, "tun_dev", 7, server.tun_name, strlen(server.tun_name));

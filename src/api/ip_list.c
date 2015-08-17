@@ -48,6 +48,7 @@ static char
 
 	packer = msgpack_packer_new((void *)buffer, msgpack_sbuffer_write);
 
+	msgpack_pack_map(packer, 1);
 	pack_ips(packer);
 
 	return_char = (char *)malloc(buffer->size + 1);
