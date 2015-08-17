@@ -87,7 +87,7 @@ static msgxchng_response_t
 void
 handle_status(api_client_t *client, msgxchng_request_t *req)
 {
-	msgxchng_response_t *res = node_generate_response;
+	msgxchng_response_t *res = node_generate_response(req);
 	vtep_log(VTEPD_DEBUG, "request %s: status", req->id);
 
 	reply(client, res);
