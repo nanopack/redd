@@ -144,6 +144,7 @@ init_udp()
 void
 shutdown_udp()
 {
+	vtep_log(VTEPD_DEBUG, "Shutting down UDP");
 	async_io_shutdown(&server.udp_async_io);
 	close(server.udp_async_io.fd);
 }

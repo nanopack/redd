@@ -411,5 +411,6 @@ close_ports()
 void
 shutdown_api()
 {
+	vtep_log(VTEPD_DEBUG, "Shutting down API");
 	close_ports();
 }

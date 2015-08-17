@@ -77,6 +77,7 @@ init_vxlan()
 void
 shutdown_vxlan()
 {
+	vtep_log(VTEPD_DEBUG, "Shutting down VXLAN");
 	if (vxlan_exists() == 0) {
 		char *add_link_cmd[] = {"ip", "link", "del", server.vxlan_name, 0};
 		if (run_cmd(add_link_cmd) != 0) {

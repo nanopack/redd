@@ -138,6 +138,7 @@ init_tun()
 void
 shutdown_tun()
 {
+	vtep_log(VTEPD_DEBUG, "Shutting down TUN");
 	async_io_shutdown(&server.tun_async_io);
 	close(server.tun_async_io.fd);
 }

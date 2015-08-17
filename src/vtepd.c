@@ -139,6 +139,7 @@ vtep_set_proc_title(char *title)
 static void
 signal_handler(uv_signal_t* handle, int signum)
 {
+	vtep_log(VTEPD_DEBUG, "Caught a signal");
 	uv_signal_stop(handle);
 	shutdown_api();
 

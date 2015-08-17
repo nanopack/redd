@@ -108,6 +108,7 @@ init_routing()
 void
 shutdown_routing()
 {
+	vtep_log(VTEPD_DEBUG, "Shutting down API");
 	shutdown_tun();
 	shutdown_udp();
 	shutdown_vxlan();
