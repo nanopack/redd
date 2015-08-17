@@ -32,7 +32,7 @@
 #include "helper.h"
 #include "ip.h"
 #include "log.h"
-#include "nodes.h"
+#include "node.h"
 #include "vtepd.h"
 
 static char
