@@ -37,7 +37,7 @@
 static vtep_ip_t
 *parse_data(char *data, int data_len)
 {
-	vtep_ip_t *ip_address = NULL;
+	vtep_ip_t *ip = NULL;
 	msgpack_zone *mempool = (msgpack_zone*)malloc(sizeof(msgpack_zone));
 	msgpack_object deserialized;
 
