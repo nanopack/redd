@@ -34,6 +34,7 @@
 
 #include "async_io.h"
 #include "util/cmd.h"
+#include "log.h"
 #include "route.h"
 #include "tun.h"
 #include "vtepd.h"
