@@ -74,21 +74,6 @@ static char
 }
 
 static void
-stats_report(uv_timer_t* handle, int status)
-{
-	double every_time = server.dump_stats_every/1000;
-	vtep_log(VTEPD_DEBUG,"UDP stats:");
-	vtep_log(VTEPD_DEBUG,"  packets in: %d out: %d",server.udp_recv_count,server.udp_send_count);
-	vtep_log(VTEPD_DEBUG,"  data in: %s out: %s",human_readable(server.udp_recv_amount,1),human_readable(server.udp_send_amount,1));
-	vtep_log(VTEPD_DEBUG,"  throughput in: %s/s out: %s/s",human_readable(server.udp_recv_amount*8/every_time,0),human_readable(server.udp_send_amount*8/every_time,0));
-
-	server.udp_send_count = 0;
-	server.udp_send_amount = 0;
-	server.udp_recv_count = 0;
-	server.udp_recv_amount = 0;
-}
-
-static void
 create_pidfile(void)
 {
 	/* Try to write the pid file in a best-effort way. */
