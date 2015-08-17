@@ -122,11 +122,13 @@ vtep_ip_t
 static int
 vxlan_has_ip(char *ip_address)
 {
+	int ret = 0;
 	char *cmd = malloc(128);
 	snprintf(cmd, 128, "ip addr show dev %s | grep %s", server.vxlan_name, ip_address);
 	char *bash_cmd[] = {"bash","-c", cmd, 0};
+	ret = run_cmd(bash_cmd);
 	free(cmd);
-	return !run_cmd(bash_cmd);
+	return !ret;
 }
 
 int
