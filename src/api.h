@@ -49,5 +49,4 @@ char	*pack_reply_data(reply_data_t *return_data, int elements, int *size);
 void	reply_error(api_client_t *client, msgxchng_request_t *req, char *error_message);
 void	reply_success(api_client_t *client, msgxchng_request_t *req);
 
-
 #endif

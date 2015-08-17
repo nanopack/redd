@@ -23,12 +23,26 @@
 /*
  * Copyright 2013 Pagoda Box, Inc.  All rights reserved.
  */
- 
 
-#ifndef VTEPD_ROUTE_H
-#define VTEPD_ROUTE_H
+#ifndef VTEPD_IP_H
+#define VTEPD_IP_H
 
-void handle_local_frame(char *frame, int len);
-void routing_init();
+#include <msgpack.h>
+
+typedef struct vtep_ip_s {
+	char 				*ip_address;
+} vtep_ip_t;
+
+void		*dup_ip(void *ptr);
+void		free_ip(void *ptr);
+int			match_ip(void *ptr, void *key);
+
+void		pack_ip(msgpack_packer *packer, vtep_ip_t *ip);
+void		pack_ips(msgpack_packer *packer);
+vtep_ip_t	*unpack_ip(msgpack_object object);
+int			validate_ip(vtep_ip_t *ip);
+
+int			add_vtep_ip(char *ip_address);
+int			remove_vtep_ip(char *ip_address);
 
 #endif

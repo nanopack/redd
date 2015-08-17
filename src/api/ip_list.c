@@ -30,6 +30,7 @@
 #include "api.h"
 #include "api/ip_list.h"
 #include "helper.h"
+#include "ip.h"
 #include "log.h"
 #include "vxlan.h"
 #include "vtepd.h"
@@ -40,28 +41,14 @@ static char
 {
 	msgpack_sbuffer *buffer = NULL;
 	msgpack_packer *packer  = NULL;
-	listIter *iterator      = listGetIterator(server.vxlan_ips, AL_START_HEAD);
-	listNode *list_node     = NULL;
 	char *return_char;
-	char *ip_address_buffer;
 
 	buffer = msgpack_sbuffer_new();
 	msgpack_sbuffer_init(buffer);
 
 	packer = msgpack_packer_new((void *)buffer, msgpack_sbuffer_write);
-	msgpack_pack_map(packer, 1);
-	msgpack_pack_raw(packer, 12);
-	msgpack_pack_raw_body(packer, "ip_addresses", 12);
-	msgpack_pack_array(packer, listLength(server.vxlan_ips));
 
-	while ((list_node = listNext(iterator)) != NULL) {
-		char *current	= (char *)list_node->value;
-		ip_address_buffer		= pack_ip_address(current);
-		msgpack_pack_map(packer, 1);
-		msgpack_pack_key_value(packer, "ip_address", 10, ip_address_buffer, strlen(ip_address_buffer));
-		free(ip_address_buffer);
-		ip_address_buffer = NULL;
-	}
+	pack_ips(packer);
 
 	return_char = (char *)malloc(buffer->size + 1);
 	memcpy(return_char, &buffer->data[0], buffer->size);
@@ -72,7 +59,6 @@ static char
 	packer = NULL;
 	msgpack_sbuffer_free(buffer);
 	buffer = NULL;
-	listReleaseIterator(iterator);
 
 	return return_char;
 }

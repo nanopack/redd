@@ -159,16 +159,6 @@ init_server(void)
 	}
 
 	server.loop = uv_default_loop();
-
-	server.udp_send_count = 0;
-	server.udp_send_amount = 0;
-	server.udp_recv_count = 0;
-	server.udp_recv_amount = 0;
-
-	if(server.dump_stats_every > 0){
-		uv_timer_init(server.loop, &server.stats_timer);
-		uv_timer_start(&server.stats_timer,stats_report,server.dump_stats_every,server.dump_stats_every);
-	}
 }
 
 int

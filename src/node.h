@@ -28,17 +28,22 @@
 #define VTEPD_NODE_H
 
 #include <netinet/in.h>
+#include <msgpack.h>
 
 typedef struct vtep_node_s {
 	char 				*hostname;
 	struct sockaddr_in	send_addr;
 } vtep_node_t;
 
-void *dup_node(void *ptr);
-void free_node(void *ptr);
-int match_node(void *ptr, void *key);
+void		*dup_node(void *ptr);
+void		free_node(void *ptr);
+int			match_node(void *ptr, void *key);
 
-void add_vtep_node(char *hostname);
-void remove_vtep_node(char *hostname);
+void		pack_node(msgpack_packer *packer, vtep_node_t *node);
+void		pack_nodes(msgpack_packer *packer);
+vtep_node_t	*unpack_node(msgpack_object object);
+
+void		add_vtep_node(char *hostname);
+void		remove_vtep_node(char *hostname);
 
 #endif

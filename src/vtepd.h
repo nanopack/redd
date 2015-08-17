@@ -35,38 +35,32 @@
 #include "route.h"
 
 // todo: move this to autobuild
-#define VTEPD_VERSION 	"0.0.1"
+#define VTEPD_VERSION					"0.0.1"
 
 /* Error codes */
-#define VTEPD_OK		0
-#define VTEPD_ERR	-1
+#define VTEPD_OK						0
+#define VTEPD_ERR						-1
 
 /* Limits */
-#define VTEPD_CONFIGLINE_MAX		1024
-#define VTEPD_MAX_LOGMSG_LEN		1024	/* Default maximum length of syslog messages */
-#define VTEPD_BINDADDR_MAX		16
+#define VTEPD_CONFIGLINE_MAX			1024
+#define VTEPD_MAX_LOGMSG_LEN			1024	/* Default maximum length of syslog messages */
+#define VTEPD_BINDADDR_MAX				16
 
 /* Sensible defaults */
-#define VTEPD_DEFAULT_PID_FILE			 "/var/run/vtep.pid"
-#define VTEPD_DEFAULT_DAEMONIZE			 0
-#define VTEPD_DEFAULT_LOGFILE			 ""
-#define VTEPD_DEFAULT_SYSLOG_IDENT		 "vtep"
-#define VTEPD_DEFAULT_SERVERPORT			 4470	/* TCP port */
-#define VTEPD_DEFAULT_MAXIDLETIME		 0	/* default client timeout: infinite */
-#define VTEPD_DEFAULT_MAX_CLIENTS		 10000
-#define VTEPD_DEFAULT_TCP_KEEPALIVE		 0
-#define VTEPD_DEFAULT_SYSLOG_ENABLED		 0
-#define VTEPD_DEFAULT_TOWER_ADDR			 "127.0.0.1"
-#define VTEPD_DEFAULT_TOWER_PORT			 5610
-#define VTEPD_DEFAULT_SAVE_PATH 			 "/var/db/vtep/"
-#define VTEPD_DEFAULT_CONNECT_RETRY_DELAY 60000
-#define VTEPD_DEFAULT_ROUTING_ENABLED     1
-#define VTEPD_DEFAULT_UDP_PORT            4789
-#define VTEPD_DEFAULT_DEVICE_CHUNKSIZE    65536
-#define VTEPD_DEFAULT_DEVICE_BUF_SECONDS  0
-#define VTEPD_DEFAULT_DEVICE_BUF_USECONDS 1000
-#define VTEPD_DEFAULT_UDP_RECV_BUF        114688
-#define VTEPD_DEFAULT_UDP_SEND_BUF        114688
+#define VTEPD_DEFAULT_PID_FILE			"/var/run/vtep.pid"
+#define VTEPD_DEFAULT_DAEMONIZE			0
+#define VTEPD_DEFAULT_LOGFILE			""
+#define VTEPD_DEFAULT_SYSLOG_IDENT		"vtep"
+#define VTEPD_DEFAULT_SERVERPORT		4470	/* TCP port */
+#define VTEPD_DEFAULT_MAXIDLETIME		0	/* default client timeout: infinite */
+#define VTEPD_DEFAULT_MAX_CLIENTS		10000
+#define VTEPD_DEFAULT_TCP_KEEPALIVE		0
+#define VTEPD_DEFAULT_SYSLOG_ENABLED	0
+#define VTEPD_DEFAULT_SAVE_PATH			"/var/db/vtep/"
+#define VTEPD_DEFAULT_ROUTING_ENABLED	1
+#define VTEPD_DEFAULT_UDP_PORT			8472
+#define VTEPD_DEFAULT_UDP_RECV_BUF		114688
+#define VTEPD_DEFAULT_UDP_SEND_BUF		114688
 
 typedef struct vtep_server_s {
 	/* General */
@@ -82,16 +76,6 @@ typedef struct vtep_server_s {
 	char				*tun_name;
 	int					tun_fd;
 	async_io_t			tun_async_io;
-
-	/* Stats */
-	int					dump_stats_every;
-	int					udp_send_count;
-	unsigned long long	udp_send_amount;
-	int					udp_recv_count;
-	unsigned long long	udp_recv_amount;
-
-	uv_timer_t			stats_timer;
-
 
 	/* Configuration */
 	char				*configfile;					/* Absolute config file path, or NULL */
@@ -116,7 +100,7 @@ typedef struct vtep_server_s {
 
 	/* Database */
 	list				*nodes;							/* List of host nodes */
-	list				*vxlan_ips;						/* List of vxlan_ips */
+	list				*ips;							/* List of attached ips */
 
 	/* VxLan */
 	char				*vxlan_name;

@@ -40,28 +40,14 @@ static char
 {
 	msgpack_sbuffer *buffer = NULL;
 	msgpack_packer *packer  = NULL;
-	listIter *iterator      = listGetIterator(server.nodes, AL_START_HEAD);
-	listNode *list_node     = NULL;
 	char *return_char;
-	char *host_buffer;
 
 	buffer = msgpack_sbuffer_new();
 	msgpack_sbuffer_init(buffer);
 
 	packer = msgpack_packer_new((void *)buffer, msgpack_sbuffer_write);
-	msgpack_pack_map(packer, 1);
-	msgpack_pack_raw(packer, 5);
-	msgpack_pack_raw_body(packer, "nodes", 5);
-	msgpack_pack_array(packer, listLength(server.nodes));
 
-	while ((list_node = listNext(iterator)) != NULL) {
-		vtep_node_t *current	= (vtep_node_t *)list_node->value;
-		host_buffer				= pack_host(current->hostname);
-		msgpack_pack_map(packer, 1);
-		msgpack_pack_key_value(packer, "node", 4, host_buffer, strlen(host_buffer));
-		free(host_buffer);
-		host_buffer = NULL;
-	}
+	pack_nodes(packer);
 
 	return_char = (char *)malloc(buffer->size + 1);
 	memcpy(return_char, &buffer->data[0], buffer->size);
@@ -72,7 +58,6 @@ static char
 	packer = NULL;
 	msgpack_sbuffer_free(buffer);
 	buffer = NULL;
-	listReleaseIterator(iterator);
 
 	return return_char;
 }

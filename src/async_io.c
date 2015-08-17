@@ -607,4 +607,3 @@ int async_io_worker_init(async_io_t *async_io, int fd, void *data,
 
 	return async_io_poll_init(async_io,async_io->worker.loop,worker_start);
 }
-

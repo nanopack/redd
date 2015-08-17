@@ -82,8 +82,6 @@ static void
 udp_read_done(void* data, async_io_buf_t* elem)
 {
 	async_io_t *async_io = (async_io_t *)data;
-	server.udp_recv_count++;
-	server.udp_recv_amount += elem->len;
 }
 
 static void 
@@ -107,8 +105,7 @@ udp_write_each(void* data, async_io_buf_t* elem)
 static void 
 udp_write_done(void* data, async_io_buf_t* elem)
 {
-	server.udp_send_count++;
-	server.udp_send_amount += elem->len;
+	async_io_t *async_io = (async_io_t *)data;
 }
 
 static void 

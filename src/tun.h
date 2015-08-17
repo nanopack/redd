@@ -23,8 +23,8 @@
 /*
  * Copyright 2015 Pagoda Box, Inc.  All rights reserved.
  */
-#ifndef TUN_H
-#define TUN_H
+#ifndef VTEPD_TUN_H
+#define VTEPD_TUN_H
 
 int tun_init();
 

@@ -30,6 +30,7 @@
 #include <string.h>	/* string operations */
 #include <syslog.h>	/* definitions for system error logging */
 
+#include "ip.h"
 #include "node.h"
 #include "vtepd.h"
 #include "vxlan.h"
@@ -244,10 +245,10 @@ init_server_config(void)
 	listSetDupMethod(server.nodes, dup_node);
 	listSetFreeMethod(server.nodes, free_node);
 	listSetMatchMethod(server.nodes, match_node);
-	server.vxlan_ips			= listCreate();
-	listSetDupMethod(server.vxlan_ips, dup_ip);
-	listSetFreeMethod(server.vxlan_ips, free_ip);
-	listSetMatchMethod(server.vxlan_ips, match_ip);
+	server.ips					= listCreate();
+	listSetDupMethod(server.ips, dup_ip);
+	listSetFreeMethod(server.ips, free_ip);
+	listSetMatchMethod(server.ips, match_ip);
 
 	/* VxLan */
 	server.vxlan_name			= strdup("vxlan0");

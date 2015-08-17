@@ -30,46 +30,37 @@
 #include "api.h"
 #include "api/ip_remove.h"
 #include "helper.h"
+#include "ip.h"
 #include "log.h"
 #include "vxlan.h"
 
-static char
+static vtep_ip_t
 *parse_data(char *data, int data_len)
 {
-	char *ip_address = blank_ip_address();
+	vtep_ip_t *ip = NULL;
 	msgpack_zone *mempool = (msgpack_zone*)malloc(sizeof(msgpack_zone));
 	msgpack_object deserialized;
 
 	msgpack_zone_init(mempool, 4096);
 	msgpack_unpack(data, data_len, NULL, mempool, &deserialized);
 
-	if (deserialized.type == MSGPACK_OBJECT_MAP) {
-		msgpack_object_kv* p = deserialized.via.map.ptr;
-		msgpack_object_kv* const pend = deserialized.via.map.ptr + deserialized.via.map.size;
-
-		for (; p < pend; ++p) {
-			if (p->key.type == MSGPACK_OBJECT_RAW && p->val.type == MSGPACK_OBJECT_RAW) {
-				if (!strncmp(p->key.via.raw.ptr, "ip_address", p->key.via.raw.size))
-					ip_address = parse_ip_address((char *)p->val.via.raw.ptr, p->val.via.raw.size);
-			}
-		}
-	}
+	ip = unpack_ip(deserialized);
 
 	msgpack_zone_destroy(mempool);
 	free(mempool);
 	mempool = NULL;
-	return ip_address;
+	return ip;
 }
 
 void
 handle_ip_remove(api_client_t *client, msgxchng_request_t *req)
 {
-	char *ip_address;
+	vtep_ip_t *ip;
 	msgxchng_response_t *res;
 
-	ip_address = parse_data(req->data, req->data_len);
-	if (validate_ip_address(ip_address)) {
-		if (vxlan_remove_ip(ip_address) == 0) {
+	ip = parse_data(req->data, req->data_len);
+	if (validate_ip(ip)) {
+		if (remove_vtep_ip(ip) == 0) {
 			reply_success(client, req);
 		} else {
 			reply_error(client, req, "There was an error trying to remove the ip address");
@@ -79,6 +70,7 @@ handle_ip_remove(api_client_t *client, msgxchng_request_t *req)
 	}
 
 	/* cleanup */
+	free_ip(ip);
 	clean_msgxchng_request(req);
 	free(req);
 	req = NULL;

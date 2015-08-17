@@ -29,29 +29,12 @@
 #include <stdio.h>
 #include <uv.h>
 
+#include "ip.h"
 #include "log.h"
 #include "util/adlist.h"
 #include "util/cmd.h"
 #include "vtepd.h"
 #include "vxlan.h"
-
-void *dup_ip(void *ptr)
-{
-	return (void *)strdup((char *)ptr);
-}
-
-void free_ip(void *ptr)
-{
-	free((char *)ptr);
-}
-
-int match_ip(void *ptr, void *key)
-{
-	if (strcmp((char *)ptr, (char *)key) == 0)
-		return 1;
-	else
-		return 0;
-}
 
 static int
 vxlan_exists()
@@ -89,40 +72,4 @@ vxlan_init()
 		return -1;
 	}
 	return 0;
-}
-
-static int
-vxlan_has_ip(char *ip_address)
-{
-	char cmd[128];
-	sprintf(&cmd, "ip addr show dev %s | grep %s", server.vxlan_name, ip_address);
-	char *bash_cmd[] = {"bash","-c", cmd, 0};
-	return !run_cmd(bash_cmd);
-}
-
-int
-vxlan_add_ip(char *ip_address)
-{
-	int ret = 0;
-	if (!vxlan_has_ip(ip_address)) {
-		char *ip = strdup(ip_address);
-		listAddNodeTail(server.vxlan_ips, (void *)ip);
-		char *cmd[] = {"ip", "addr", "add", ip_address, "dev", server.vxlan_name, 0};
-		ret = run_cmd(cmd);
-	}
-	return ret;
-}
-
-int
-vxlan_remove_ip(char *ip_address)
-{
-	int ret = 0;
-	if (vxlan_has_ip(ip_address)) {
-		listNode *node = listSearchKey(server.vxlan_ips, (void *)ip_address);
-		if (node)
-			listDelNode(server.vxlan_ips, node);
-		char *cmd[] = {"ip", "addr", "del", ip_address, "dev", server.vxlan_name, 0};
-		ret = run_cmd(cmd);
-	}
-	return ret;
 }

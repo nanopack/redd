@@ -33,45 +33,36 @@
 #include "log.h"
 #include "node.h"
 
-static char
+static vtep_node_t
 *parse_data(char *data, int data_len)
 {
-	char *host = blank_host();
+	vtep_node_t *node = NULL;
 	msgpack_zone *mempool = (msgpack_zone*)malloc(sizeof(msgpack_zone));
 	msgpack_object deserialized;
 
 	msgpack_zone_init(mempool, 4096);
 	msgpack_unpack(data, data_len, NULL, mempool, &deserialized);
 
-	if (deserialized.type == MSGPACK_OBJECT_MAP) {
-		msgpack_object_kv* p = deserialized.via.map.ptr;
-		msgpack_object_kv* const pend = deserialized.via.map.ptr + deserialized.via.map.size;
-
-		for (; p < pend; ++p) {
-			if (p->key.type == MSGPACK_OBJECT_RAW && p->val.type == MSGPACK_OBJECT_RAW) {
-				if (!strncmp(p->key.via.raw.ptr, "node", p->key.via.raw.size))
-					host = parse_host((char *)p->val.via.raw.ptr, p->val.via.raw.size);
-			}
-		}
-	}
+	node = unpack_node(deserialized);
 
 	msgpack_zone_destroy(mempool);
 	free(mempool);
 	mempool = NULL;
-	return host;
+	return node;
 }
 
 void
 handle_node_add(api_client_t *client, msgxchng_request_t *req)
 {
-	char *host;
+	vtep_node_t *node;
 	msgxchng_response_t *res;
 
-	host = parse_data(req->data, req->data_len);
-	if (validate_host(host)) {
-		add_vtep_node(host);
+	node = parse_data(req->data, req->data_len);
+	if (validate_node(node)) {
+		add_vtep_node(node);
 		reply_success(client, req);
 	} else {
+		free_node(node);
 		reply_error(client, req, "There was an error validating the node");
 	}
 

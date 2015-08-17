@@ -27,12 +27,6 @@
 #ifndef VTEPD_VXLAN_H
 #define VTEPD_VXLAN_H
 
-void *dup_ip(void *ptr);
-void free_ip(void *ptr);
-int match_ip(void *ptr, void *key);
-
 int vxlan_init();
-int vxlan_add_ip(char *ip_address);
-int vxlan_remove_ip(char *ip_address);
 
 #endif

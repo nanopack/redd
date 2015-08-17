@@ -29,6 +29,7 @@
 #include <uv.h>
 
 #include "node.h"
+#include "helper.h"
 #include "util/adlist.h"
 #include "vtepd.h"
 
@@ -61,20 +62,82 @@ int match_node(void *ptr, void *key)
 	}
 }
 
-void add_vtep_node(char *hostname)
+void
+pack_node(msgpack_packer *packer, vtep_node_t *node)
 {
-	vtep_node_t *vtep_node = malloc(sizeof(vtep_node_t));
-	vtep_node->hostname = strdup(hostname);
-	vtep_node->send_addr = uv_ip4_addr(vtep_node->hostname, 8472);
-	listAddNodeTail(server.nodes, (void *)vtep_node);
+	msgpack_pack_map(packer, 1);
+	pack_key_value(packer, "node", 4, node->hostname, (int)strlen(node->hostname));
 }
 
-void remove_vtep_node(char *hostname)
+void
+pack_nodes(msgpack_packer *packer)
 {
-	vtep_node_t key;
+	listIter *iterator	= listGetIterator(server.nodes, AL_START_HEAD);
+	listNode *list_node	= NULL;
+	vtep_node_t *node = NULL;
+	msgpack_pack_map(packer, 1);
+	msgpack_pack_raw(packer, 12);
+	msgpack_pack_raw_body(packer, "nodes", 5);
+	msgpack_pack_array(packer, listLength(server.nodes));
+	while ((list_node = listNext(iterator)) != NULL) {
+		node = (vtep_node_t *)list_node->value;
+		pack_node(packer, node);
+	}
+	listReleaseIterator(iterator);
+}
+
+vtep_node_t
+*unpack_node(msgpack_object object)
+{
+	if (object.type != MSGPACK_OBJECT_MAP)
+		return NULL;
+
+	vtep_node_t *node = malloc(sizeof(vtep_node_t));
+	init_node(node);
+
+	msgpack_object_kv* p    = object.via.map.ptr;
+	msgpack_object_kv* pend = object.via.map.ptr + object.via.map.size;
+
+	for (; p < pend; ++p) {
+		if (p->key.type != MSGPACK_OBJECT_RAW || p->val.type != MSGPACK_OBJECT_RAW)
+			continue;
+
+		msgpack_object_raw *key = &(p->key.via.raw);
+		msgpack_object_raw *val = &(p->val.via.raw);
+
+		if (!strncmp(key->ptr, "node", key->size)) {
+			node->hostname = strndup(val->ptr, val->size);
+		}
+	}
+
+	return node;
+}
+
+int
+validate_node(vtep_node_t *node)
+{
+	if (node != NULL && validate_host(node->hostname))
+		return 1;
+	else
+		return 0;
+}
+
+void
+add_vtep_node(vtep_node_t *node)
+{
+	if (listSearchKey(server.nodes, node) == NULL) {
+		node->send_addr = uv_ip4_addr(node->hostname, atoi(server.vxlan_port));
+		listAddNodeTail(server.nodes, (void *)node);
+	} else {
+		free_node(node);
+	}
+}
+
+void
+remove_vtep_node(vtep_node_t *key)
+{
 	listNode *node;
-	key.hostname = hostname;
-	node = listSearchKey(server.nodes, &key);
-	if (node)
+	if ((node = listSearchKey(server.nodes, key) != NULL) {
 		listDelNode(server.nodes, node);
+	}
 }
