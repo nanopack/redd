@@ -616,27 +616,27 @@ async_io_buf_free(async_io_buf_t *buf)
 static void
 async_io_queue_shutdown(async_io_queue_t *async_io_queue)
 {
-	while(!ngx_queue_empty(async_io_queue->avail_queue)) {
+	while(!ngx_queue_empty(&async_io_queue->avail_queue)) {
 		ngx_queue_t *q;
-		q = ngx_queue_last(&async_io->write_io.avail_queue);
+		q = ngx_queue_last(&async_io_queue->avail_queue);
 		ngx_queue_remove(q);
 		async_io_buf_free(ngx_queue_data(q, async_io_buf_t, queue));
 	}
-	while(!ngx_queue_empty(async_io_queue->ready_queue)) {
+	while(!ngx_queue_empty(&async_io_queue->ready_queue)) {
 		ngx_queue_t *q;
-		q = ngx_queue_last(&async_io->write_io.ready_queue);
+		q = ngx_queue_last(&async_io_queue->ready_queue);
 		ngx_queue_remove(q);
 		async_io_buf_free(ngx_queue_data(q, async_io_buf_t, queue));
 	}
-	while(!ngx_queue_empty(async_io_queue->work_queue)) {
+	while(!ngx_queue_empty(&async_io_queue->work_queue)) {
 		ngx_queue_t *q;
-		q = ngx_queue_last(&async_io->write_io.work_queue);
+		q = ngx_queue_last(&async_io_queue->work_queue);
 		ngx_queue_remove(q);
 		async_io_buf_free(ngx_queue_data(q, async_io_buf_t, queue));
 	}
-	while(!ngx_queue_empty(async_io_queue->work_done)) {
+	while(!ngx_queue_empty(&async_io_queue->work_done)) {
 		ngx_queue_t *q;
-		q = ngx_queue_last(&async_io->write_io.work_done);
+		q = ngx_queue_last(&async_io_queue->work_done);
 		ngx_queue_remove(q);
 		async_io_buf_free(ngx_queue_data(q, async_io_buf_t, queue));
 	}
@@ -652,5 +652,5 @@ async_io_shutdown(async_io_t *async_io)
 {
 	async_io_poll_stop(async_io);
 	async_io_queue_shutdown(&async_io->read_io);
-	async_io_queue_shutdown(&write->read_io);
+	async_io_queue_shutdown(&async_io->write_io);
 }
