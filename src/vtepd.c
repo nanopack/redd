@@ -148,7 +148,7 @@ signal_handler(uv_signal_t* handle, int signum)
 
 	// shutdown_server();
 
-	clean_server_config();
+	// clean_server_config();
 	uv_stop(server.loop);
 }
 

@@ -311,8 +311,8 @@ clean_server_config()
 
 	/* Logging */
 	vtep_log(VTEPD_DEBUG, "Cleaning config - Logging");
-	// free(server.logfile);
-	// server.logfile = NULL;
+	free(server.logfile);
+	server.logfile = NULL;
 	free(server.syslog_ident);
 	server.syslog_ident = NULL;
 
