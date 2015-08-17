@@ -44,14 +44,14 @@ vxlan_exists()
 }
 
 int
-vxlan_init()
+init_vxlan()
 {
 	/*
 	 *  Run the following:
 	 *  ip link add vxlan0 type vxlan id 1 group 239.0.0.1 dev eth0
 	 *  ip link set vxlan0 up
 	 */
-	if (vxlan_exists != 0) {
+	if (vxlan_exists() != 0) {
 		char *add_link_cmd[] = {"ip", "link", "add", server.vxlan_name, "type", "vxlan", "id", server.vxlan_vni, "dev", server.vxlan_interface, 0};
 		if (run_cmd(add_link_cmd) != 0) {
 			vtep_log(VTEPD_WARNING, "Failed to create link %s", server.vxlan_name);
@@ -72,4 +72,15 @@ vxlan_init()
 		return -1;
 	}
 	return 0;
+}
+
+void
+shutdown_vxlan()
+{
+	if (vxlan_exists() == 0) {
+		char *add_link_cmd[] = {"ip", "link", "del", server.vxlan_name, 0};
+		if (run_cmd(add_link_cmd) != 0) {
+			vtep_log(VTEPD_WARNING, "Failed to remove link %s", server.vxlan_name);
+		}
+	}
 }

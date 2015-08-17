@@ -478,7 +478,6 @@ write_pong(uv_async_t *handle, int status)
 	// send_write_buffers(queue);
 }
 
-
 static void
 async_io_worker_do(async_io_queue_t *async_io_queue)
 { 
@@ -499,7 +498,6 @@ async_io_worker_do(async_io_queue_t *async_io_queue)
 		ngx_queue_insert_tail(&async_io_queue->work_done, q);
 	}
 }
-
 
 static int 
 async_io_worker_poll_start(async_io_t *async_io)
@@ -522,7 +520,6 @@ async_io_worker_poll_start(async_io_t *async_io)
 	return retval;
 
 }
-
 
 static void
 async_io_worker_poll_cb(uv_poll_t *poll, int status, int events)
@@ -606,4 +603,54 @@ int async_io_worker_init(async_io_t *async_io, int fd, void *data,
 		write_each, write_done, write_cb);
 
 	return async_io_poll_init(async_io,async_io->worker.loop,worker_start);
+}
+
+static void
+async_io_buf_free(async_io_buf_t *buf)
+{
+	if (buf->buf)
+		free(buf->buf);
+	free(buf);
+}
+
+static void
+async_io_queue_shutdown(async_io_queue_t *async_io_queue)
+{
+	while(!ngx_queue_empty(async_io_queue->avail_queue)) {
+		ngx_queue_t *q;
+		q = ngx_queue_last(&async_io->write_io.avail_queue);
+		ngx_queue_remove(q);
+		async_io_buf_free(ngx_queue_data(q, async_io_buf_t, queue));
+	}
+	while(!ngx_queue_empty(async_io_queue->ready_queue)) {
+		ngx_queue_t *q;
+		q = ngx_queue_last(&async_io->write_io.ready_queue);
+		ngx_queue_remove(q);
+		async_io_buf_free(ngx_queue_data(q, async_io_buf_t, queue));
+	}
+	while(!ngx_queue_empty(async_io_queue->work_queue)) {
+		ngx_queue_t *q;
+		q = ngx_queue_last(&async_io->write_io.work_queue);
+		ngx_queue_remove(q);
+		async_io_buf_free(ngx_queue_data(q, async_io_buf_t, queue));
+	}
+	while(!ngx_queue_empty(async_io_queue->work_done)) {
+		ngx_queue_t *q;
+		q = ngx_queue_last(&async_io->write_io.work_done);
+		ngx_queue_remove(q);
+		async_io_buf_free(ngx_queue_data(q, async_io_buf_t, queue));
+	}
+
+	ngx_queue_init(&async_io_queue->avail_queue);
+	ngx_queue_init(&async_io_queue->ready_queue);
+	ngx_queue_init(&async_io_queue->work_queue);
+	ngx_queue_init(&async_io_queue->work_done);
+}
+
+void
+async_io_shutdown(async_io_t *async_io)
+{
+	async_io_poll_stop(async_io);
+	async_io_queue_shutdown(&async_io->read_io);
+	async_io_queue_shutdown(&write->read_io);
 }

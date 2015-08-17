@@ -116,7 +116,7 @@ udp_write_cb(void* data, int status)
 }
 
 void
-udp_init()
+init_udp()
 {
 	int fd;
 	struct sockaddr_in udp_addr;
@@ -139,4 +139,11 @@ udp_init()
 	async_io_init(&server.udp_async_io, fd, (void *)&server.udp_async_io,
 		2048, 16, udp_read_each, udp_read_done, udp_read_cb,
 		2048, 256, udp_write_each, udp_write_done, udp_write_cb);
+}
+
+void
+shutdown_udp()
+{
+	async_io_shutdown(&server.udp_async_io);
+	close(server.udp_async_io.fd);
 }

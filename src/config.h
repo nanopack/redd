@@ -28,5 +28,6 @@
 
 void	init_server_config(void);
 void	load_server_config(char *filename, char *options);
+void	clean_server_config(void);
 
 #endif

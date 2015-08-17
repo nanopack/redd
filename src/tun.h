@@ -26,6 +26,7 @@
 #ifndef VTEPD_TUN_H
 #define VTEPD_TUN_H
 
-int tun_init();
+int init_tun();
+void shutdown_tun();
 
 #endif

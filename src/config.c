@@ -297,3 +297,46 @@ load_server_config(char *filename, char *options)
 	load_server_config_from_string(config);
 	sdsfree(config);
 }
+
+void
+clean_server_config()
+{
+		/* General */
+	if (server.configfile)
+		free(server.configfile);
+	server.configfile = NULL;
+	free(server.pidfile);
+	server.pidfile = NULL;
+
+	/* Logging */
+	free(server.logfile);
+	server.logfile = NULL;
+	free(server.syslog_ident);
+	server.syslog_ident = NULL;
+
+	/* Networking */
+	free(server.udp_listen_address);
+	server.udp_listen_address = NULL;
+
+	/* Database */
+	listRelease(server.nodes);
+	server.nodes = NULL;
+	listRelease(server.ips);
+	server.ips = NULL;
+
+	/* VxLan */
+	free(server.vxlan_name);
+	server.vxlan_name = NULL;
+	free(server.vxlan_vni);
+	server.vxlan_vni = NULL;
+	free(server.vxlan_group);
+	server.vxlan_group = NULL;
+	free(server.vxlan_port);
+	server.vxlan_port = NULL;
+	free(server.vxlan_interface);
+	server.vxlan_interface = NULL;
+
+	/* Save */
+	free(server.save_path);
+	server.save_path = NULL;
+}

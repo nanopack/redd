@@ -98,9 +98,17 @@ handle_local_frame(char *frame, int len)
 }
 
 void 
-routing_init()
+init_routing()
 {
-	tun_init();
-	udp_init();
-	vxlan_init();
+	init_tun();
+	init_udp();
+	init_vxlan();
+}
+
+void
+shutdown_routing()
+{
+	shutdown_tun();
+	shutdown_udp();
+	shutdown_vxlan();
 }

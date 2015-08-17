@@ -137,6 +137,13 @@ vtep_set_proc_title(char *title)
 }
 
 static void
+signal_handler(uv_signal_t* handle, int signum)
+{
+	uv_signal_stop(handle);
+	uv_stop(server.loop);
+}
+
+static void
 init_server(void)
 {
 	if (server.syslog_enabled) {
@@ -144,6 +151,10 @@ init_server(void)
 	}
 
 	server.loop = uv_default_loop();
+	uv_signal_init(server.loop, &server.signal_handle);
+	uv_signal_start(&server.signal_handle, signal_handler, SIGUSR1);
+	uv_signal_start(&server.signal_handle, signal_handler, SIGTERM);
+	uv_signal_start(&server.signal_handle, signal_handler, SIGINT);
 }
 
 int
@@ -207,5 +218,16 @@ main(int argc, char **argv)
 	if (server.ipfd_count > 0)
 		vtep_log(VTEPD_NOTICE, "The server is now ready to accept connections on port %d", server.port);
 
-	return uv_run(server.loop, UV_RUN_DEFAULT);
+	uv_run(server.loop, UV_RUN_DEFAULT);
+
+	shutdown_api();
+
+	if (server.routing_enabled)
+		shutdown_routing();
+
+	shutdown_server();
+
+	clean_server_config();
+
+	return 0;
 }

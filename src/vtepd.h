@@ -65,6 +65,7 @@
 typedef struct vtep_server_s {
 	/* General */
 	uv_loop_t			*loop;							/* Event loop */
+	uv_signal_t			signal_handle;
 
 	/* Udp */
 	char				*udp_listen_address;			/* Address for the udp server to listen to */

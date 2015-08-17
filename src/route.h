@@ -29,6 +29,7 @@
 #define VTEPD_ROUTE_H
 
 void handle_local_frame(char *frame, int len);
-void routing_init();
+void init_routing();
+void shutdown_routing();
 
 #endif

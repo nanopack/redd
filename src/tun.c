@@ -98,7 +98,7 @@ tun_write_cb(void* data, int status){
 }
 
 int
-tun_init()
+init_tun()
 {
 	int fd;
 	int err;
@@ -133,4 +133,11 @@ tun_init()
 	return async_io_init(&server.tun_async_io, fd, (void *)&server.tun_async_io,
 		2048, 16, tun_read_each, tun_read_done, tun_read_cb,
 		2048, 16, tun_write_each, tun_write_done, tun_write_cb);
+}
+
+void
+shutdown_tun()
+{
+	async_io_shutdown(&server.tun_async_io);
+	close(server.tun_async_io.fd);
 }

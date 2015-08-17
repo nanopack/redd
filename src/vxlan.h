@@ -27,6 +27,7 @@
 #ifndef VTEPD_VXLAN_H
 #define VTEPD_VXLAN_H
 
-int vxlan_init();
+int init_vxlan();
+void shutdown_vxlan();
 
 #endif

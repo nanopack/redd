@@ -106,5 +106,6 @@ int async_io_worker_init(async_io_t *async_io, int fd, void *data,
 int async_io_poll_start(async_io_t *async_io);
 int async_io_poll_stop(async_io_t *async_io);
 void send_write_buffers(async_io_queue_t *queue);
+void async_io_shutdown(async_io_t *async_io);
 
 #endif

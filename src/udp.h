@@ -27,6 +27,7 @@
 #ifndef VTEPD_UDP_H
 #define VTEPD_UDP_H
 
-void udp_init();
+void init_udp();
+void shutdown_udp();
 
 #endif
