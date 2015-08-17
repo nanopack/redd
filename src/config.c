@@ -301,7 +301,8 @@ load_server_config(char *filename, char *options)
 void
 clean_server_config()
 {
-		/* General */
+	/* General */
+	vtep_log(VTEPD_DEBUG, "Cleaning config - General");
 	if (server.configfile)
 		free(server.configfile);
 	server.configfile = NULL;
@@ -309,22 +310,26 @@ clean_server_config()
 	server.pidfile = NULL;
 
 	/* Logging */
+	vtep_log(VTEPD_DEBUG, "Cleaning config - Logging");
 	free(server.logfile);
 	server.logfile = NULL;
 	free(server.syslog_ident);
 	server.syslog_ident = NULL;
 
 	/* Networking */
+	vtep_log(VTEPD_DEBUG, "Cleaning config - Networking");
 	free(server.udp_listen_address);
 	server.udp_listen_address = NULL;
 
 	/* Database */
+	vtep_log(VTEPD_DEBUG, "Cleaning config - Database");
 	listRelease(server.nodes);
 	server.nodes = NULL;
 	listRelease(server.ips);
 	server.ips = NULL;
 
 	/* VxLan */
+	vtep_log(VTEPD_DEBUG, "Cleaning config - VxLan");
 	free(server.vxlan_name);
 	server.vxlan_name = NULL;
 	free(server.vxlan_vni);
@@ -337,6 +342,7 @@ clean_server_config()
 	server.vxlan_interface = NULL;
 
 	/* Save */
+	vtep_log(VTEPD_DEBUG, "Cleaning config - Save");
 	free(server.save_path);
 	server.save_path = NULL;
 }

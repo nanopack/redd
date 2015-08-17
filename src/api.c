@@ -404,7 +404,8 @@ close_ports()
 {
 	int i;
 	for (i = 0; i < server.ipfd_count; i++) {
-		uv_close(server.ipfd[i], NULL);
+		uv_close(server.ipfd[i], free);
+		server.ipfd[i] = NULL;
 	}
 }
 
