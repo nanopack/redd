@@ -48,5 +48,6 @@ void	reply(api_client_t *client, msgxchng_response_t *res);
 char	*pack_reply_data(reply_data_t *return_data, int elements, int *size);
 void	reply_error(api_client_t *client, msgxchng_request_t *req, char *error_message);
 void	reply_success(api_client_t *client, msgxchng_request_t *req);
+void	shutdown_api();
 
 #endif

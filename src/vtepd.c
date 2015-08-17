@@ -140,6 +140,14 @@ static void
 signal_handler(uv_signal_t* handle, int signum)
 {
 	uv_signal_stop(handle);
+	shutdown_api();
+
+	if (server.routing_enabled)
+		shutdown_routing();
+
+	// shutdown_server();
+
+	clean_server_config();
 	uv_stop(server.loop);
 }
 
@@ -208,7 +216,7 @@ main(int argc, char **argv)
 	if (server.daemonize) daemonize();
 	init_server();
 	if (server.routing_enabled)
-		routing_init();
+		init_routing();
 	init_api();
 	if (server.daemonize) create_pidfile();
 	vtep_set_proc_title(argv[0]);
@@ -219,15 +227,6 @@ main(int argc, char **argv)
 		vtep_log(VTEPD_NOTICE, "The server is now ready to accept connections on port %d", server.port);
 
 	uv_run(server.loop, UV_RUN_DEFAULT);
-
-	shutdown_api();
-
-	if (server.routing_enabled)
-		shutdown_routing();
-
-	shutdown_server();
-
-	clean_server_config();
 
 	return 0;
 }

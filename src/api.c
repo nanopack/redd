@@ -398,3 +398,18 @@ init_api(void)
 		exit(1);
 	}
 }
+
+static void
+close_ports()
+{
+	int i;
+	for (i = 0; i < server.ipfd_count; i++) {
+		uv_close(server.ipfd[i], NULL);
+	}
+}
+
+void
+shutdown_api()
+{
+	close_ports();
+}
