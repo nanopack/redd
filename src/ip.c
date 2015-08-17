@@ -30,6 +30,7 @@
 
 #include "ip.h"
 #include "helper.h"
+#include "log.h"
 #include "util/adlist.h"
 #include "util/cmd.h"
 #include "vtepd.h"
@@ -122,9 +123,10 @@ vtep_ip_t
 static int
 vxlan_has_ip(char *ip_address)
 {
-	char cmd[128];
+	char *cmd = malloc(128);
 	snprintf(&cmd, 128, "ip addr show dev %s | grep %s", server.vxlan_name, ip_address);
 	char *bash_cmd[] = {"bash","-c", cmd, 0};
+	free(cmd);
 	return !run_cmd(bash_cmd);
 }
 
