@@ -66,7 +66,7 @@ void
 pack_node(msgpack_packer *packer, vtep_node_t *node)
 {
 	msgpack_pack_map(packer, 1);
-	pack_key_value(packer, "node", 4, node->hostname, (int)strlen(node->hostname));
+	msgpack_pack_key_value(packer, "node", 4, node->hostname, (int)strlen(node->hostname));
 }
 
 void
@@ -84,6 +84,13 @@ pack_nodes(msgpack_packer *packer)
 		pack_node(packer, node);
 	}
 	listReleaseIterator(iterator);
+}
+
+static void
+init_node(vtep_node_t *node)
+{
+	node->hostname = NULL;
+	memset(&node->send_addr, 0, sizeof(struct sockaddr_in));
 }
 
 vtep_node_t
@@ -137,7 +144,7 @@ void
 remove_vtep_node(vtep_node_t *key)
 {
 	listNode *node;
-	if ((node = listSearchKey(server.nodes, key) != NULL) {
+	if ((node = listSearchKey(server.nodes, key)) != NULL) {
 		listDelNode(server.nodes, node);
 	}
 }

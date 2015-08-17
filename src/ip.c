@@ -66,7 +66,7 @@ void
 pack_ip(msgpack_packer *packer, vtep_ip_t *ip)
 {
 	msgpack_pack_map(packer, 1);
-	pack_key_value(packer, "ip_address", 10, ip->ip_address, (int)strlen(ip->ip_address));
+	msgpack_pack_key_value(packer, "ip_address", 10, ip->ip_address, (int)strlen(ip->ip_address));
 }
 
 void
@@ -84,6 +84,12 @@ pack_ips(msgpack_packer *packer)
 		pack_ip(packer, ip);
 	}
 	listReleaseIterator(iterator);
+}
+
+static void
+init_ip(vtep_ip_t *ip)
+{
+	ip->ip_address = NULL;
 }
 
 vtep_ip_t

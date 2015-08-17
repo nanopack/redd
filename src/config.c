@@ -197,8 +197,6 @@ load_server_config_from_string(char *config)
 		} else if (!strcasecmp(argv[0],"vxlan-interface") && argc == 2) {
 			free(server.vxlan_interface);
 			server.vxlan_interface = strdup(argv[1]);
-		} else if (!strcasecmp(argv[0], "dump-stats-every") && argc == 2) {
-			server.dump_stats_every = atoi(argv[1]) * 1000;
 		} else {
 			err = "Bad directive or wrong number of arguments"; goto loaderr;
 		} 

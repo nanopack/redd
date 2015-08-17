@@ -42,7 +42,7 @@ void		pack_ips(msgpack_packer *packer);
 vtep_ip_t	*unpack_ip(msgpack_object object);
 int			validate_ip(vtep_ip_t *ip);
 
-int			add_vtep_ip(char *ip_address);
-int			remove_vtep_ip(char *ip_address);
+int			add_vtep_ip(vtep_ip_t *ip);
+int			remove_vtep_ip(vtep_ip_t *key);
 
 #endif

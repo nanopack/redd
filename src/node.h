@@ -43,7 +43,7 @@ void		pack_node(msgpack_packer *packer, vtep_node_t *node);
 void		pack_nodes(msgpack_packer *packer);
 vtep_node_t	*unpack_node(msgpack_object object);
 
-void		add_vtep_node(char *hostname);
-void		remove_vtep_node(char *hostname);
+void		add_vtep_node(vtep_node_t *node);
+void		remove_vtep_node(vtep_node_t *key);
 
 #endif

@@ -16,6 +16,7 @@ vtepd_SOURCES =  \
 	async_io.c async_io.h \
 	config.c config.h \
 	helper.c helper.h \
+	ip.c ip.h \
 	log.c log.h \
 	node.c node.h \
 	route.c route.h \
