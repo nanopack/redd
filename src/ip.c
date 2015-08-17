@@ -124,7 +124,7 @@ static int
 vxlan_has_ip(char *ip_address)
 {
 	char *cmd = malloc(128);
-	snprintf(&cmd, 128, "ip addr show dev %s | grep %s", server.vxlan_name, ip_address);
+	snprintf(cmd, 128, "ip addr show dev %s | grep %s", server.vxlan_name, ip_address);
 	char *bash_cmd[] = {"bash","-c", cmd, 0};
 	free(cmd);
 	return !run_cmd(bash_cmd);

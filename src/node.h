@@ -42,6 +42,7 @@ int			match_node(void *ptr, void *key);
 void		pack_node(msgpack_packer *packer, vtep_node_t *node);
 void		pack_nodes(msgpack_packer *packer);
 vtep_node_t	*unpack_node(msgpack_object object);
+int			validate_node(vtep_node_t *node);
 
 void		add_vtep_node(vtep_node_t *node);
 void		remove_vtep_node(vtep_node_t *key);
