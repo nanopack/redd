@@ -49,12 +49,12 @@ static char
 
 	pack_nodes(packer);
 	pack_ips(packer);
-	msgpack_pack_key_value(packer, "tun_dev", 7, server->tun_name, strlen(server->tun_name));
-	msgpack_pack_key_value(packer, "vxlan_dev", 9, server->vxlan_name, strlen(server->vxlan_name));
-	msgpack_pack_key_value(packer, "vxlan_vni", 9, server->vxlan_vni, strlen(server->vxlan_vni));
-	msgpack_pack_key_value(packer, "vxlan_group", 11, server->vxlan_group, strlen(server->vxlan_group));
-	msgpack_pack_key_value(packer, "vxlan_port", 10, server->vxlan_port, strlen(server->vxlan_port));
-	msgpack_pack_key_value(packer, "vxlan_interface", 15, server->vxlan_interface, strlen(server->vxlan_interface));
+	msgpack_pack_key_value(packer, "tun_dev", 7, server.tun_name, strlen(server.tun_name));
+	msgpack_pack_key_value(packer, "vxlan_dev", 9, server.vxlan_name, strlen(server.vxlan_name));
+	msgpack_pack_key_value(packer, "vxlan_vni", 9, server.vxlan_vni, strlen(server.vxlan_vni));
+	msgpack_pack_key_value(packer, "vxlan_group", 11, server.vxlan_group, strlen(server.vxlan_group));
+	msgpack_pack_key_value(packer, "vxlan_port", 10, server.vxlan_port, strlen(server.vxlan_port));
+	msgpack_pack_key_value(packer, "vxlan_interface", 15, server.vxlan_interface, strlen(server.vxlan_interface));
 
 	return_char = (char *)malloc(buffer->size + 1);
 	memcpy(return_char, &buffer->data[0], buffer->size);
