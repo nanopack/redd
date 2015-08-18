@@ -62,6 +62,7 @@ handle_ip_add(api_client_t *client, msgxchng_request_t *req)
 	if (validate_ip(ip)) {
 		if (add_vtep_ip(ip) == 0) {
 			reply_success(client, req);
+			save_ips();
 		} else {
 			reply_error(client, req, "There was an error trying to add the ip address");
 		}

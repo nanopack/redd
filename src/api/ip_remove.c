@@ -62,6 +62,7 @@ handle_ip_remove(api_client_t *client, msgxchng_request_t *req)
 	if (validate_ip(ip)) {
 		if (remove_vtep_ip(ip) == 0) {
 			reply_success(client, req);
+			save_ips();
 		} else {
 			reply_error(client, req, "There was an error trying to remove the ip address");
 		}

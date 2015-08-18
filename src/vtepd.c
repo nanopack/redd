@@ -222,6 +222,9 @@ main(int argc, char **argv)
 	if (server.daemonize) create_pidfile();
 	vtep_set_proc_title(argv[0]);
 
+	load_ips();
+	load_nodes();
+
 	vtep_log(VTEPD_WARNING, "Server started, VTEP version " VTEPD_VERSION);
 
 	if (server.ipfd_count > 0)

@@ -44,6 +44,9 @@ void		pack_nodes(msgpack_packer *packer);
 vtep_node_t	*unpack_node(msgpack_object object);
 int			validate_node(vtep_node_t *node);
 
+void		save_nodes();
+void		load_nodes();
+
 void		add_vtep_node(vtep_node_t *node);
 void		remove_vtep_node(vtep_node_t *key);
 
