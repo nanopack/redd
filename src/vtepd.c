@@ -229,5 +229,7 @@ main(int argc, char **argv)
 
 	uv_run(server.loop, UV_RUN_DEFAULT);
 
+	uv_loop_delete(server.loop);
+
 	return 0;
 }

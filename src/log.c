@@ -44,7 +44,7 @@ vtep_log_raw(int level, const char *msg)
 	FILE *fp;
 	char buf[64];
 	int rawmode = (level & VTEPD_LOG_RAW);
-	int log_to_stdout = server.logfile[0] == '\0';
+	int log_to_stdout = (server.logfile == NULL || server.logfile[0] == '\0');
 
 	level &= 0xff; /* clear flags */
 	if (level < server.verbosity) return;

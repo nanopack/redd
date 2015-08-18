@@ -294,6 +294,12 @@ on_connect(uv_stream_t* listener, int status)
 
 }
 
+static void
+free_uv_tcp(uv_handle_t* handle)
+{
+	free((uv_tcp_t *)handle);
+}
+
 /* Initialize a set of file descriptors to listen to the specified 'port'
  * binding the addresses specified in the VTEP server configuration.
  *
@@ -344,7 +350,8 @@ listen_to_port(int port, uv_tcp_t *fds[], int *count)
 					(uv_listen((uv_stream_t *)(fds[*count]), 128, on_connect) == UV_OK)) {
 				(*count)++;
 			} else {
-				(void) free(fds[*count]);
+				uv_close((uv_handle_t *) fds[*count], free_uv_tcp);
+				// (void) free(fds[*count]);
 				fds[*count] = NULL;
 			}
 			/* Exit the loop if we were able to bind * on IPv4 or IPv6,
@@ -404,7 +411,7 @@ close_ports()
 {
 	int i;
 	for (i = 0; i < server.ipfd_count; i++) {
-		uv_close(server.ipfd[i], free);
+		uv_close((uv_handle_t *)server.ipfd[i], free_uv_tcp);
 		server.ipfd[i] = NULL;
 	}
 }

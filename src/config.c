@@ -304,7 +304,7 @@ clean_server_config()
 	/* General */
 	vtep_log(VTEPD_DEBUG, "Cleaning config - General");
 	if (server.configfile)
-		free(server.configfile);
+		sdsfree(server.configfile);
 	server.configfile = NULL;
 	free(server.pidfile);
 	server.pidfile = NULL;
@@ -327,6 +327,11 @@ clean_server_config()
 	server.nodes = NULL;
 	listRelease(server.ips);
 	server.ips = NULL;
+
+	/* TUN */
+	vtep_log(VTEPD_DEBUG, "Cleaning config - TUN");
+	free(server.tun_name);
+	server.tun_name = NULL;
 
 	/* VxLan */
 	vtep_log(VTEPD_DEBUG, "Cleaning config - VxLan");
