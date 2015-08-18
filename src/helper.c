@@ -156,8 +156,10 @@ save_data(char *filename, save_data_function pack_function)
 	char *save_file_name;
 	FILE *save_file;
 
-	if ((save_file_name = get_save_file_path(filename)) == NULL)
+	if ((save_file_name = get_save_file_path(filename)) == NULL) {
+		vtep_log(VTEPD_WARNING, "get_save_file_path returned NULL");
 		return;
+	}
 
 	buffer = msgpack_sbuffer_new();
 	msgpack_sbuffer_init(buffer);
@@ -197,8 +199,10 @@ load_data(char *filename, load_data_function unpack_function)
 	msgpack_zone *mempool;
 	msgpack_object deserialized;
 
-	if ((save_file_name = get_save_file_path(filename)) == NULL);
+	if ((save_file_name = get_save_file_path(filename)) == NULL) {
+		vtep_log(VTEPD_WARNING, "get_save_file_path returned NULL");
 		return;
+	}
 	if (stat(save_file_name, &file_stat) != 0) {
 		free(save_file_name);
 		return;
