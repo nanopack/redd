@@ -30,7 +30,6 @@
 #include <uv.h>
 
 #include "async_io.h"
-#include "util/dict.h"
 #include "util/adlist.h"
 #include "route.h"
 

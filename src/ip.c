@@ -25,9 +25,7 @@
  */
 
 #include <string.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <sys/stat.h>
 #include <uv.h>
 
 #include "ip.h"
@@ -122,138 +120,41 @@ vtep_ip_t
 }
 
 void
-save_ips()
+unpack_ips(msgpack_object object)
 {
-	msgpack_sbuffer *buffer = NULL;
-	msgpack_packer *packer  = NULL;
-	char *save_file_name;
-	FILE *save_file;
-
-	if (server.save_path == NULL) {
+	if (object.type != MSGPACK_OBJECT_MAP)
 		return;
-	}
-	len = strlen(server.save_path);
-	if (len == 0) {
-		return;
-	}
-	if (server.save_path[len - 1] == '/') {
-		save_file_name = (char *)malloc(len + 4);
-		sprintf(save_file_name, "%s%s", server.save_path, "ips");
-	} else {
-		save_file_name = (char *)malloc(len + 5);
-		sprintf(save_file_name, "%s/%s", server.save_path, "ips");
-	}
+	msgpack_object_kv* p = object.via.map.ptr;
+	msgpack_object_kv* const pend = object.via.map.ptr + object.via.map.size;
 
-	buffer = msgpack_sbuffer_new();
-	msgpack_sbuffer_init(buffer);
+	for (; p < pend; ++p) {
+		if (p->key.type == MSGPACK_OBJECT_RAW && p->val.type == MSGPACK_OBJECT_ARRAY) {
+			if (!strncmp(p->key.via.raw.ptr, "ip_addresses", p->key.via.raw.size)) {
+				if(p->val.type == MSGPACK_OBJECT_ARRAY) {
+					vtep_ip_t *ip;
 
-	packer = msgpack_packer_new((void *)buffer, msgpack_sbuffer_write);
-
-	msgpack_pack_map(packer, 1);
-	pack_ips(packer);
-
-	if ((save_file = fopen(save_file_name, "w")) != NULL) {
-		size_t written;
-		written = fwrite((void *)&buffer->data[0], 1, buffer->size, save_file);
-		fclose(save_file);
-		if (written != buffer->size) {
-			vtep_log(VTEPD_WARNING, "Failed to write to %s", save_file_name);
-		}
-	} else {
-		vtep_log(VTEPD_WARNING, "Failed to open %s", save_file_name);
-	}
-
-	free(save_file_name);
-	save_file_name = NULL;
-	msgpack_packer_free(packer);
-	packer = NULL;
-	msgpack_sbuffer_free(buffer);
-	buffer = NULL;
-}
-
-void
-load_ips()
-{
-	char *save_file_name;
-	char *save_data;
-	FILE *save_file;
-	int len;
-	struct stat file_stat;
-	msgpack_zone *mempool;
-	msgpack_object deserialized;
-	if (server.save_path == NULL) {
-		return;
-	}
-	len = strlen(server.save_path);
-	if (len == 0) {
-		return;
-	}
-	if (server.save_path[len - 1] == '/') {
-		save_file_name = (char *)malloc(len + 4);
-		sprintf(save_file_name, "%s%s", server.save_path, "ips");
-	} else {
-		save_file_name = (char *)malloc(len + 5);
-		sprintf(save_file_name, "%s/%s", server.save_path, "ips");
-	}
-
-	if (stat(save_file_name, &file_stat) != 0) {
-		free(save_file_name);
-		return;
-	}
-	if (!S_ISREG(file_stat.st_mode)) {
-		free(save_file_name);
-		return;
-	}
-	len = file_stat.st_size;
-	if ((save_file = fopen(save_file_name, "r")) != NULL) {
-		size_t bytes_read;
-		save_data = (char *)malloc(len);
-		bytes_read = fread((void *)save_data, 1, len, save_file);
-		fclose(save_file);
-		if (bytes_read != len) {
-			vtep_log(VTEPD_WARNING, "Failed to read data from %s", save_file_name);
-			free(save_file_name);
-			free(save_data);
-			return;
-		}
-	} else {
-		vtep_log(VTEPD_WARNING, "Failed to open %s", save_file_name);
-		free(save_file_name);
-		return;
-	}
-	mempool = (msgpack_zone *)malloc(sizeof(msgpack_zone));
-	msgpack_zone_init(mempool, 4096);
-	msgpack_unpack(save_data, len, NULL, mempool, &deserialized);
-
-	if (deserialized.type == MSGPACK_OBJECT_MAP) {
-		msgpack_object_kv* p = deserialized.via.map.ptr;
-		msgpack_object_kv* const pend = deserialized.via.map.ptr + deserialized.via.map.size;
-
-		for (; p < pend; ++p) {
-			if (p->key.type == MSGPACK_OBJECT_RAW && p->val.type == MSGPACK_OBJECT_ARRAY) {
-				if (!strncmp(p->key.via.raw.ptr, "ip_addresses", p->key.via.raw.size)) {
-					if(p->val.type == MSGPACK_OBJECT_ARRAY) {
-						vtep_ip_t *ip;
-
-						for (int i = 0; i < p->val.via.array.size; i++) {
-							ip = unpack_ip(p->val.via.array.ptr[i]);
-							if (ip) {
-								add_vtep_ip(ip);
-							}
+					for (int i = 0; i < p->val.via.array.size; i++) {
+						ip = unpack_ip(p->val.via.array.ptr[i]);
+						if (ip) {
+							add_vtep_ip(ip);
 						}
 					}
 				}
 			}
 		}
 	}
+}
 
-	free(save_file_name);
-	save_file_name = NULL;
-	free(save_data);
-	save_data = NULL;
-	msgpack_zone_destroy(mempool);
-	free(mempool);
-	mempool = NULL;
+void
+save_ips()
+{
+	save_data("ips", pack_ips);
+}
+
+void
+load_ips()
+{
+	load_data("ips", unpack_ips);
 }
 
 static int

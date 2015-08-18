@@ -40,6 +40,7 @@ int			match_ip(void *ptr, void *key);
 void		pack_ip(msgpack_packer *packer, vtep_ip_t *ip);
 void		pack_ips(msgpack_packer *packer);
 vtep_ip_t	*unpack_ip(msgpack_object object);
+void		unpack_ips(msgpack_object object);
 int			validate_ip(vtep_ip_t *ip);
 
 void		save_ips();

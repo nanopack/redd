@@ -26,7 +26,6 @@ vtepd_SOURCES =  \
 	vxlan.c vxlan.h \
 	util/adlist.c util/adlist.h \
 	util/cmd.c util/cmd.h \
-	util/dict.c util/dict.h \
 	util/setproctitle.c \
 	util/sds.c util/sds.h \
 	util/util.c util/util.h

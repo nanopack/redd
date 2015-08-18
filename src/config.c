@@ -291,8 +291,8 @@ load_server_config(char *filename, char *options)
 	}
 	/* Append the additional options */
 	if (options) {
-		config = sdscat(config,"\n");
-		config = sdscat(config,options);
+		config = sdscat(config, "\n");
+		config = sdscat(config, options);
 	}
 	load_server_config_from_string(config);
 	sdsfree(config);
@@ -302,7 +302,7 @@ void
 clean_server_config()
 {
 	/* General */
-	vtep_log(VTEPD_DEBUG, "Cleaning config - General");
+	vtep_log(VTEPD_DEBUG, "Cleaning config");
 	if (server.configfile)
 		sdsfree(server.configfile);
 	server.configfile = NULL;
@@ -310,31 +310,26 @@ clean_server_config()
 	server.pidfile = NULL;
 
 	/* Logging */
-	vtep_log(VTEPD_DEBUG, "Cleaning config - Logging");
 	free(server.logfile);
 	server.logfile = NULL;
 	free(server.syslog_ident);
 	server.syslog_ident = NULL;
 
 	/* Networking */
-	vtep_log(VTEPD_DEBUG, "Cleaning config - Networking");
 	free(server.udp_listen_address);
 	server.udp_listen_address = NULL;
 
 	/* Database */
-	vtep_log(VTEPD_DEBUG, "Cleaning config - Database");
 	listRelease(server.nodes);
 	server.nodes = NULL;
 	listRelease(server.ips);
 	server.ips = NULL;
 
 	/* TUN */
-	vtep_log(VTEPD_DEBUG, "Cleaning config - TUN");
 	free(server.tun_name);
 	server.tun_name = NULL;
 
 	/* VxLan */
-	vtep_log(VTEPD_DEBUG, "Cleaning config - VxLan");
 	free(server.vxlan_name);
 	server.vxlan_name = NULL;
 	free(server.vxlan_vni);
@@ -347,7 +342,6 @@ clean_server_config()
 	server.vxlan_interface = NULL;
 
 	/* Save */
-	vtep_log(VTEPD_DEBUG, "Cleaning config - Save");
 	free(server.save_path);
 	server.save_path = NULL;
 }

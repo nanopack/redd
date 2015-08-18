@@ -31,6 +31,9 @@
 #include <stdint.h>
 #include <uv.h>
 
+typedef void (*save_data_function)(msgpack_packer *packer);
+typedef void (*load_data_function)(msgpack_object object);
+
 
 // helper functions
 void	msgpack_pack_key_value(msgpack_packer *packer, char *key, 
@@ -49,5 +52,8 @@ char	*pack_ip_address(char *ip_address);
 char	*pack_host(char *host);
 
 void	ngx_empty_into(ngx_queue_t *from,ngx_queue_t *to,int limit);
+
+void	save_data(char *filename, save_data_function pack_function);
+void	load_data(char *filename, load_data_function unpack_funciton);
 
 #endif

@@ -37,6 +37,8 @@
 #include "config.h"
 #include "vtepd.h"
 #include "log.h"
+#include "node.h"
+#include "ip.h"
 #include "util/util.h"
 #include "route.h"
 

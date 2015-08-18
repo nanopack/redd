@@ -59,7 +59,6 @@ async_io_do(uv_work_t *req)
 	void *data = baton->async_io_queue->data;
 	async_io_queue_t *async_io_queue = baton->async_io_queue;
 
-	// async_io_loop_do(data, async_io_queue);
 	ngx_queue_t *q;
 	async_io_buf_t *buf;
 	while(!ngx_queue_empty(&async_io_queue->work_queue)) {
@@ -98,18 +97,6 @@ async_io_callback(uv_work_t *req, int status)
 	async_io_baton_t *baton = (async_io_baton_t*)req->data;
 	void *data = baton->async_io_queue->data;
 	async_io_queue_t *async_io_queue = baton->async_io_queue;
-
-	// if (async_io_queue->flags & UV_READABLE) {
-	// 	if (ngx_queue_empty(&async_io_queue->work_queue)) {
-	// 		async_io_buf_t *buf = async_io_buf_create(async_io_queue->buf_len);
-	// 		ngx_queue_insert_tail(&async_io_queue->avail_queue, &buf->queue);
-	// 		async_io_queue->buf_count++;
-	// 		vtep_log(VTEPD_DEBUG, "async_io_callback created new buffer for %d - total now %d", async_io_queue->fd, async_io_queue->buf_count);
-
-	// 	}
-	// }
-
-	// async_io_loop_callback(data, read_io, status);
 
 	ngx_queue_t *q;
 	async_io_buf_t *buf;
@@ -180,7 +167,6 @@ async_io_queue_init(async_io_queue_t *async_io_queue, int fd, int flags, void *d
 	async_io_queue->fd = fd;
 	async_io_queue->flags = flags;
 	async_io_queue->data = data;
-	// vtep_log(VTEPD_DEBUG, "async_io_queue_init");
 	ngx_queue_init(&async_io_queue->avail_queue);
 	ngx_queue_init(&async_io_queue->ready_queue);
 	ngx_queue_init(&async_io_queue->work_queue);
@@ -196,22 +182,18 @@ async_io_queue_init(async_io_queue_t *async_io_queue, int fd, int flags, void *d
 	int i;
 	for (i = 0; i < buf_count; i++) {
 		async_io_buf_t *buf = async_io_buf_create(buf_len);
-		// vtep_log(VTEPD_DEBUG, "begin ngx_queue_insert_tail");
 		ngx_queue_insert_tail(&async_io_queue->avail_queue, &buf->queue);
-		// vtep_log(VTEPD_DEBUG, "end ngx_queue_insert_tail");
 	}
 }
 
 async_io_buf_t
 *async_io_buf_create(int len)
 {
-	// vtep_log(VTEPD_DEBUG, "async_io_buf_create size: %d", len);
 	async_io_buf_t *buf = (async_io_buf_t *)malloc(sizeof(async_io_buf_t));
 	ngx_queue_init(&buf->queue);
 	buf->len = len;
 	buf->maxlen = len;
 	buf->buf = (char *)malloc(len);
-	// vtep_log(VTEPD_DEBUG, "end async_io_buf_create");
 	return buf;
 }
 
@@ -219,19 +201,9 @@ async_io_buf_t
 *async_io_write_buf_get(async_io_t *async_io)
 {
 	async_io_buf_t *buf = NULL;
-	
+
 	if (ngx_queue_empty(&async_io->write_io.avail_queue)) {
 		return NULL;
-		// if(async_io->write_io.buf_count < 3000){
-		// 	buf = async_io_buf_create(async_io->write_io.buf_len);
-		// 	async_io->write_io.buf_count++;
-		// }else{
-		// 	ngx_queue_t *q;
-		// 	q = ngx_queue_head(&async_io->write_io.ready_queue);
-		// 	ngx_queue_remove(q);
-		// 	buf = ngx_queue_data(q, async_io_buf_t, queue);
-		// }
-		// vtep_log(VTEPD_DEBUG, "async_io_write_buf_get created new buffer for %d - total now %d", async_io->write_io.fd, async_io->write_io.buf_count);
 	} else {
 		ngx_queue_t *q;
 		q = ngx_queue_last(&async_io->write_io.avail_queue);
@@ -250,8 +222,6 @@ async_io_init(async_io_t *async_io, int fd, void *data,
 	async_io_each write_each, async_io_done write_done, async_io_cb write_cb)
 {
 	async_io->fd = fd;
-	// async_io->data = data;
-	// async_io->working = 0;
 	async_io_queue_init(&async_io->read_io, fd, UV_READABLE, data,
 		read_buf_len, read_buf_count, 
 		read_each, read_done, read_cb);
@@ -289,28 +259,6 @@ async_io_poll_start(async_io_t *async_io)
 	}
 
 	return retval;
-
-	// int flags = UV_READABLE;
-	// int retval = UV_OK;
-	// // vtep_log(VTEPD_DEBUG, "async_io_poll_start on %d", async_io->fd);
-	
-	// if (!async_io_queue->working) {
-	// 	if(!ngx_queue_empty(&async_io_queue->ready_queue)){
-	// 		// vtep_log(VTEPD_DEBUG, "async_io_poll_start writable");
-	// 		flags |= UV_WRITABLE;
-	// 	}
-		
-	// 	retval = uv_poll_start(&async_io_queue->poll, flags, async_io_queue_poll_cb);
-	// 	if (retval != UV_OK) {
-	// 		uv_err_t error = uv_last_error(server.loop);
-	// 		vtep_log(VTEPD_WARNING, "FATAL uv_poll_start %s: %s", uv_err_name(error), uv_strerror(error));
-	// 	}
-	// }
-	// else {
-	// 	// vtep_log(VTEPD_DEBUG, "async_io_poll_start on %d is working", async_io->fd);
-	// }
-
-	// return (retval);
 }
 
 /* secondary thread */
@@ -343,7 +291,6 @@ read_ping(uv_async_t *handle, int status)
 		queue->_done(queue->data,packet);
 	}
 	uv_async_send(&queue->pong);
-	
 }
 
 /* secondary thread */
@@ -355,10 +302,9 @@ read_pong(uv_async_t *handle, int status)
 
 	queue->_cb(queue->data,1);
 	ngx_empty_into(&queue->send_queue,&queue->avail_queue,-1);
-	
+
 	queue->working = false;
 	send_read_buffers(async_io);
-	
 }
 
 void
@@ -381,26 +327,6 @@ write_ping(uv_async_t *handle, int status)
 {
 	async_io_t *async_io = (async_io_t *)handle->data;
 	async_io_worker_poll_start(async_io);
-	// async_io_queue_t *queue = (async_io_queue_t *)&async_io->write_io;
-	// void *data = queue->data;
-
-	// ngx_queue_t *q;
-	// async_io_buf_t *buf;
-	// while(!ngx_queue_empty(&queue->send_queue)) {
-	// 	q = ngx_queue_head(&queue->send_queue);
-	// 	buf = ngx_queue_data(q, async_io_buf_t, queue);
-	// 	if (!queue->_each(data, buf))
-	// 		break;
-	// 	ngx_queue_remove(q);
-	// 	ngx_queue_insert_tail(&queue->work_done, q);
-	// }
-	
-	// if(!ngx_queue_empty(&queue->send_queue)){
-	// 	async_io->write_io.signaled = false;
-	// 	async_io_worker_poll_start(async_io);
-	// }else{
-	// 	uv_async_send(&queue->pong);
-	// }
 }
 
 static void
@@ -409,18 +335,6 @@ async_io_worker_write_callback(uv_work_t *req, int status)
 	async_io_baton_t *baton = (async_io_baton_t*)req->data;
 	void *data = baton->async_io_queue->data;
 	async_io_queue_t *async_io_queue = baton->async_io_queue;
-
-	// if (async_io_queue->flags & UV_READABLE) {
-	// 	if (ngx_queue_empty(&async_io_queue->work_queue)) {
-	// 		async_io_buf_t *buf = async_io_buf_create(async_io_queue->buf_len);
-	// 		ngx_queue_insert_tail(&async_io_queue->avail_queue, &buf->queue);
-	// 		async_io_queue->buf_count++;
-	// 		vtep_log(VTEPD_DEBUG, "async_io_callback created new buffer for %d - total now %d", async_io_queue->fd, async_io_queue->buf_count);
-
-	// 	}
-	// }
-
-	// async_io_loop_callback(data, read_io, status);
 
 	ngx_queue_t *q;
 	async_io_buf_t *buf;
@@ -459,35 +373,15 @@ write_pong(uv_async_t *handle, int status)
 	baton->req.data = (void *)baton;
 	ngx_empty_into(&async_io->write_io.ready_queue, &async_io->write_io.work_queue,32);
 	uv_queue_work(server.loop, &baton->req, async_io_do, async_io_worker_write_callback);
-
-	// async_io_queue_t *queue = (async_io_queue_t *)&async_io->write_io;
-
-
-	// ngx_queue_t *q;
-	// ngx_queue_foreach(q,&queue->work_done){
-	// 	async_io_buf_t *packet = ngx_queue_data(q,async_io_buf_t,queue);
-	// 	queue->_done(queue->data,packet);
-	// }
-	// // ngx_empty_into(&queue->send_queue,&queue->avail_queue);
-	// if(!ngx_queue_empty(&queue->work_done)){
-	// 	queue->_cb(queue->data,1);
-	// }
-	// ngx_empty_into(&queue->work_done,&queue->avail_queue,-1);
-
-	// queue->working = false;
-	// send_write_buffers(queue);
 }
 
 static void
 async_io_worker_do(async_io_queue_t *async_io_queue)
 { 
 	void *data = async_io_queue->data;
-	// async_io_loop_do(data, async_io_queue);
 	ngx_queue_t *q;
 	async_io_buf_t *buf;
-	// if(ngx_queue_empty(&async_io_queue->work_queue)){
-	// 	vtep_log(VTEPD_DEBUG, "work queue is empty");
-	// }
+
 	while(!ngx_queue_empty(&async_io_queue->work_queue)) {
 		q = ngx_queue_head(&async_io_queue->work_queue);
 		buf = ngx_queue_data(q, async_io_buf_t, queue);
@@ -529,18 +423,13 @@ async_io_worker_poll_cb(uv_poll_t *poll, int status, int events)
 		uv_err_t err = uv_last_error(async_io->worker.loop);
 		vtep_log(VTEPD_DEBUG, "hey we got an error!! %s",uv_strerror(err));
 	}
-	
-	
+
 	if (events & UV_READABLE) {
-		// vtep_log(VTEPD_DEBUG, "hey I'm readable");
 		ngx_empty_into(&async_io->read_io.avail_queue, &async_io->read_io.work_queue,-1);
 		async_io_worker_do(&async_io->read_io);
 		send_read_buffers(async_io);
-
 	}
 	if ((events & UV_WRITABLE) && !async_io->write_io.working) {
-		// async_io->write_io.signaled = true;
-		// async_io->write_io.working = true;
 		uv_async_send(&async_io->write_io.pong);
 	}
 	async_io_worker_poll_start(async_io);
@@ -553,15 +442,13 @@ init_worker(void *data)
 	async_io_t *async_io = (async_io_t *)data;
 	async_io_worker_poll_start(async_io);
 	uv_run(async_io->worker.loop, UV_RUN_DEFAULT);
-	// send_buffers(async_io);
 }
 
 static int 
 worker_start(async_io_t *async_io)
 {
 	worker_thread_t *worker = &async_io->worker;
-	
-	
+
 	uv_async_init(worker->loop,&async_io->write_io.ping,write_ping);
 	uv_async_init(server.loop,&async_io->write_io.pong,write_pong);
 	uv_async_init(server.loop,&async_io->read_io.ping,read_ping);
@@ -577,9 +464,6 @@ worker_start(async_io_t *async_io)
 
 	ngx_queue_init(&async_io->write_io.send_queue);
 	ngx_queue_init(&async_io->read_io.send_queue);
-
-	// ngx_empty_into(&async_io->write_io.avail_queue,&async_io->write_io.send_queue);
-
 	return uv_thread_create(&worker->me, init_worker, async_io);
 }
 
@@ -590,11 +474,8 @@ int async_io_worker_init(async_io_t *async_io, int fd, void *data,
 	int write_buf_len, int write_buf_count, 
 	async_io_each write_each, async_io_done write_done, async_io_cb write_cb)
 {
-
 	async_io->fd = fd;
 	async_io->worker.loop = uv_loop_new();
-	// async_io->data = data;
-	// async_io->working = 0;
 	async_io_queue_init(&async_io->read_io, fd, UV_READABLE, data,
 		read_buf_len, read_buf_count, 
 		read_each, read_done, read_cb);
