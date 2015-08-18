@@ -133,6 +133,9 @@ save_ips()
 		return;
 	}
 	len = strlen(server.save_path);
+	if (len == 0) {
+		return;
+	}
 	if (server.save_path[len - 1] == '/') {
 		save_file_name = (char *)malloc(len + 4);
 		sprintf(save_file_name, "%s%s", server.save_path, "ips");
@@ -182,6 +185,9 @@ load_ips()
 		return;
 	}
 	len = strlen(server.save_path);
+	if (len == 0) {
+		return;
+	}
 	if (server.save_path[len - 1] == '/') {
 		save_file_name = (char *)malloc(len + 4);
 		sprintf(save_file_name, "%s%s", server.save_path, "ips");
