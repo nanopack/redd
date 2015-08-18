@@ -37,6 +37,7 @@
 #include "log.h"
 #include "util/cmd.h"
 #include "helper.h"
+#include "vtepd.h"
 
 void 
 msgpack_pack_key_value(msgpack_packer *packer, char *key, int key_len, char *value, int value_len)
@@ -124,8 +125,9 @@ static char
 {
 	char *save_file_name;
 	struct stat file_stat;
+	int len;
 	if (stat(server.save_path, &file_stat) != 0) {
-		char *cmd[] = {"mkdir", "-p", server.save_path, 0}
+		char *cmd[] = {"mkdir", "-p", server.save_path, 0};
 		if (!run_cmd(cmd))
 			return NULL;
 	}
@@ -153,7 +155,6 @@ save_data(char *filename, save_data_function pack_function)
 	msgpack_packer *packer  = NULL;
 	char *save_file_name;
 	FILE *save_file;
-	int len;
 
 	if ((save_file_name = get_save_file_path(filename)) == NULL)
 		return;
