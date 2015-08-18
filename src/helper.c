@@ -145,7 +145,7 @@ static char
 		save_file_name = (char *)malloc(len + strlen(file_name) + 2);
 		sprintf(save_file_name, "%s/%s", server.save_path, file_name);
 	}
-	return save_file_name
+	return save_file_name;
 }
 
 void
