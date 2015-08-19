@@ -42,42 +42,42 @@ The following things can be set in the vtepd configuration file:
 - vxlan-interface
 
 #### pidfile
-Path to file where a pidfile is stored.
+Path to file where a pidfile is stored. Defaults to "/var/run/vtep.pid".
 #### daemonize
-Start up as a daemonized background process. Options are "yes" and "no".
+Start up as a daemonized background process. Options are "yes" and "no". Defaults to "no".
 #### loglevel
-How much output to the log file. Options are "debug", "verbose", "notice", and "warning".
+How much output to the log file. Options are "debug", "verbose", "notice", and "warning". Defaults to "notice".
 #### logfile
-Path to file where to output logs.
+Path to file where to output logs. Outputs to stdout if empty. Defaults to stdout.
 #### syslog-enabled
-Send logs to syslog. Options are "yes" and "no".
+Send logs to syslog. Options are "yes" and "no". Defaults to "no".
 #### syslog-ident
-Identifier string for syslog.
+Identifier string for syslog. Defaults to "vtep".
 #### syslog-facility
-Syslog facility to use. Options are "USER", "LOCAL0", "LOCAL1", "LOCAL2", "LOCAL3", "LOCAL4", "LOCAL5", "LOCAL6", and "LOCAL7".
+Syslog facility to use. Options are "USER", "LOCAL0", "LOCAL1", "LOCAL2", "LOCAL3", "LOCAL4", "LOCAL5", "LOCAL6", and "LOCAL7". Defaults to "LOCAL0".
 #### port
-Port for the API to listen to.
+Port for the API to listen to. Defaults to "4470".
 #### bind
-IP address for the API to bind to.
+IP address for the API to bind to. Defaults to "0.0.0.0".
 #### timeout
-API timeout.
+API timeout. Defaults to infinite.
 #### routing-enabled
-Enable the routing of packets. Options are "yes" and "no".
+Enable the routing of packets. Options are "yes" and "no". Defaults to "yes".
 #### udp-listen-address
-IP address for unicast packets to send / receive from.
+IP address for unicast packets to send / receive from. Defaults to "localhost".
 #### udp-recv-buf
-Receive buffer size.
+Receive buffer size. Defaults to "114688".
 #### udp-send-buf
-Send buffer size.
+Send buffer size. Defaults to "114688".
 #### save-path
-Path to directory to save data for IPs and host nodes.
+Path to directory to save data for IPs and host nodes. Defaults to "/var/db/vtep/".
 #### vxlan-name
-Name of the vxlan interface.
+Name of the vxlan interface. Defaults to "vxlan0".
 #### vxlan-vni
-Virtual network identifier for the vxlan interface.
+Virtual network identifier for the vxlan interface. Defaults to "1".
 #### vxlan-group
-Multicast address for the vxlan interface.
+Multicast address for the vxlan interface. Defaults to "239.0.0.1".
 #### vxlan-port
-Port to configure the vxlan driver to use.
+Port to configure the vxlan driver to use. Defaults to "8472".
 #### vxlan-interface
-Physical interface to send vxlan traffic over.
+Physical interface to send vxlan traffic over. Defaults to "eth0".

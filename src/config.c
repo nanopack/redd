@@ -253,7 +253,7 @@ init_server_config(void)
 	server.vxlan_vni			= strdup("1");
 	server.vxlan_group			= strdup("239.0.0.1");
 	server.vxlan_port			= strdup("8472");
-	server.vxlan_interface		= strdup("eth1");
+	server.vxlan_interface		= strdup("eth0");
 
 	/* Save */
 	server.save_path			= strdup(VTEPD_DEFAULT_SAVE_PATH);
