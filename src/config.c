@@ -197,6 +197,11 @@ load_server_config_from_string(char *config)
 		} else if (!strcasecmp(argv[0],"vxlan-interface") && argc == 2) {
 			free(server.vxlan_interface);
 			server.vxlan_interface = strdup(argv[1]);
+		} else if (!strcasecmp(argv[0],"vxlan-max-retries") && argc == 2) {
+			server.vxlan_max_retries = atoi(argv[1]);
+			if (server.vxlan_max_retries < 0) {
+				err = "Invalid retry value"; goto loaderr;
+			}
 		} else {
 			err = "Bad directive or wrong number of arguments"; goto loaderr;
 		} 
@@ -254,6 +259,7 @@ init_server_config(void)
 	server.vxlan_group			= strdup("239.0.0.1");
 	server.vxlan_port			= strdup("8472");
 	server.vxlan_interface		= strdup("eth0");
+	server.vxlan_max_retries	= VTEPD_DEFAULT_VXLAN_MAX_RETRIES;
 
 	/* Save */
 	server.save_path			= strdup(VTEPD_DEFAULT_SAVE_PATH);

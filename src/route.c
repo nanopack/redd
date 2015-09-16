@@ -33,6 +33,7 @@
 #include <netinet/ip.h>
 #include <netinet/udp.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 #include "api.h"
 #include "async_io.h"
@@ -100,9 +101,18 @@ handle_local_frame(char *frame, int len)
 void 
 init_routing()
 {
+	int retry;
 	init_tun();
 	init_udp();
-	init_vxlan();
+	for (retry = 0; retry < server.max_vxlan_retries; retry++) {
+		if (init_vxlan() == 0) {
+			break;
+		} else {
+			shutdown_vxlan();
+			sleep(1);
+			vtep_log(VTEPD_WARN, "Retrying VXLAN initialization");
+		}
+	}
 }
 
 void

@@ -60,6 +60,7 @@
 #define VTEPD_DEFAULT_UDP_PORT			8472
 #define VTEPD_DEFAULT_UDP_RECV_BUF		114688
 #define VTEPD_DEFAULT_UDP_SEND_BUF		114688
+#define VTEPD_DEFAULT_VXLAN_MAX_RETRIES	10
 
 typedef struct vtep_server_s {
 	/* General */
@@ -108,6 +109,7 @@ typedef struct vtep_server_s {
 	char				*vxlan_group;
 	char				*vxlan_port;
 	char				*vxlan_interface;
+	int					vxlan_max_retries;
 
 	/* Save */
 	char				*save_path;					/* Where to save things */
