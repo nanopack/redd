@@ -33,7 +33,6 @@
 #include <netinet/ip.h>
 #include <netinet/udp.h>
 #include <fcntl.h>
-#include <unistd.h>
 
 #include "api.h"
 #include "async_io.h"
