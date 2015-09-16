@@ -101,18 +101,9 @@ handle_local_frame(char *frame, int len)
 void 
 init_routing()
 {
-	int retry;
 	init_tun();
 	init_udp();
-	for (retry = 0; retry < server.max_vxlan_retries; retry++) {
-		if (init_vxlan() == 0) {
-			break;
-		} else {
-			shutdown_vxlan();
-			sleep(1);
-			vtep_log(VTEPD_WARNING, "Retrying VXLAN initialization");
-		}
-	}
+	init_vxlan();
 }
 
 void

@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <unistd.h>
 #include <uv.h>
 
 #include "ip.h"
@@ -51,27 +52,49 @@ init_vxlan()
 	 *  ip link add vxlan0 type vxlan id 1 group 239.0.0.1 dev eth0
 	 *  ip link set vxlan0 up
 	 */
+	int retry;
+	int success = -1;
+
+	
 	if (vxlan_exists() != 0) {
 		char *add_link_cmd[] = {"ip", "link", "add", server.vxlan_name, "type", "vxlan", "id", server.vxlan_vni, "dev", server.vxlan_interface, 0};
-		if (run_cmd(add_link_cmd) != 0) {
-			vtep_log(VTEPD_WARNING, "Failed to create link %s", server.vxlan_name);
-			return -1;
+		for (retry = 0; retry < server.vxlan_max_retries; retry++) {
+			if ((success = run_cmd(add_link_cmd)) == 0) {
+				break;
+			} else {
+				vtep_log(VTEPD_WARNING, "Failed to create link %s", server.vxlan_name);
+				sleep(1);
+				vtep_log(VTEPD_WARNING, "Retrying to create link %s", server.vxlan_name);
+			}
 		}
 	}
+
+	if (success == -1) return -1;
+
 	char *set_link_cmd[] = {"ip", "link", "set", server.vxlan_name, "up", 0};
-	if (run_cmd(set_link_cmd) != 0)
-	{
-		vtep_log(VTEPD_WARNING, "Failed to set link %s up", server.vxlan_name);
-		return -1;
+	for (retry = 0; retry < server.vxlan_max_retries; retry++) {
+		if ((success = run_cmd(set_link_cmd)) == 0)	{
+			break;
+		} else {
+			vtep_log(VTEPD_WARNING, "Failed to set link %s up", server.vxlan_name);
+			sleep(1);
+			vtep_log(VTEPD_WARNING, "Retrying to set link %s up", server.vxlan_name);
+		}
 	}
 
+	if (success == -1) return -1;
+
 	char *set_route_cmd[] = {"bridge", "fdb", "add", "to", "00:00:00:00:00:00", "dst", server.vxlan_group, "via", server.tun_name, "dev", server.vxlan_name, 0};
-	if (run_cmd(set_route_cmd) != 0)
-	{
-		vtep_log(VTEPD_WARNING, "Failed to set route %s", server.vxlan_name);
-		return -1;
+	for (retry = 0; retry < server.vxlan_max_retries; retry++) {
+		if ((success = run_cmd(set_route_cmd)) == 0) {
+			break;
+		} else {
+			vtep_log(VTEPD_WARNING, "Failed to set route %s", server.vxlan_name);
+			sleep(1);
+			vtep_log(VTEPD_WARNING, "Retrying to set route %s", server.vxlan_name);
+		}
 	}
-	return 0;
+	return success;
 }
 
 void
