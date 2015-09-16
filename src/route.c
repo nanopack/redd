@@ -110,7 +110,7 @@ init_routing()
 		} else {
 			shutdown_vxlan();
 			sleep(1);
-			vtep_log(VTEPD_WARN, "Retrying VXLAN initialization");
+			vtep_log(VTEPD_WARNING, "Retrying VXLAN initialization");
 		}
 	}
 }
