@@ -34,7 +34,7 @@
 #include "route.h"
 
 // todo: move this to autobuild
-#define VTEPD_VERSION					"0.0.1"
+#define VTEPD_VERSION					"0.0.2"
 
 /* Error codes */
 #define VTEPD_OK						0
