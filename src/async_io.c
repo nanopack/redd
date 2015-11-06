@@ -30,7 +30,7 @@
 
 #include "async_io.h"
 #include "log.h"
-#include "vtepd.h"
+#include "redd.h"
 #include "helper.h"
 
 static void async_io_worker_poll_cb(uv_poll_t *poll, int status, int events);
@@ -152,7 +152,7 @@ async_io_poll_init(async_io_t *async_io, uv_loop_t *loop,int (*init_cb)(async_io
 	int retval = uv_poll_init(loop, &async_io->poll, async_io->fd);
 	if (retval != UV_OK) {
 		uv_err_t error = uv_last_error(loop);
-		vtep_log(VTEPD_WARNING, "FATAL uv_poll_init %s: %s\n", uv_err_name(error), uv_strerror(error));
+		red_log(REDD_WARNING, "FATAL uv_poll_init %s: %s\n", uv_err_name(error), uv_strerror(error));
 		return retval;
 	}
 
@@ -421,7 +421,7 @@ async_io_worker_poll_cb(uv_poll_t *poll, int status, int events)
 	async_io_t *async_io = (async_io_t *)poll->data;
 	if(status == -1){
 		uv_err_t err = uv_last_error(async_io->worker.loop);
-		vtep_log(VTEPD_DEBUG, "hey we got an error!! %s",uv_strerror(err));
+		red_log(REDD_DEBUG, "hey we got an error!! %s",uv_strerror(err));
 	}
 
 	if (events & UV_READABLE) {

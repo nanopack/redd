@@ -32,7 +32,7 @@
 #include "helper.h"
 #include "log.h"
 #include "node.h"
-#include "vtepd.h"
+#include "redd.h"
 #include "util/adlist.h"
 
 static char

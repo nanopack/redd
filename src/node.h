@@ -24,31 +24,31 @@
  * Copyright 2013 Pagoda Box, Inc.  All rights reserved.
  */
 
-#ifndef VTEPD_NODE_H
-#define VTEPD_NODE_H
+#ifndef REDD_NODE_H
+#define REDD_NODE_H
 
 #include <netinet/in.h>
 #include <msgpack.h>
 
-typedef struct vtep_node_s {
+typedef struct red_node_s {
 	char 				*hostname;
 	struct sockaddr_in	send_addr;
-} vtep_node_t;
+} red_node_t;
 
 void		*dup_node(void *ptr);
 void		free_node(void *ptr);
 int			match_node(void *ptr, void *key);
 
-void		pack_node(msgpack_packer *packer, vtep_node_t *node);
+void		pack_node(msgpack_packer *packer, red_node_t *node);
 void		pack_nodes(msgpack_packer *packer);
-vtep_node_t	*unpack_node(msgpack_object object);
+red_node_t	*unpack_node(msgpack_object object);
 void		unpack_nodes(msgpack_object object);
-int			validate_node(vtep_node_t *node);
+int			validate_node(red_node_t *node);
 
 void		save_nodes();
 void		load_nodes();
 
-void		add_vtep_node(vtep_node_t *node);
-void		remove_vtep_node(vtep_node_t *key);
+void		add_red_node(red_node_t *node);
+void		remove_red_node(red_node_t *key);
 
 #endif

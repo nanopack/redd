@@ -34,10 +34,10 @@
 #include "log.h"
 #include "vxlan.h"
 
-static vtep_ip_t
+static red_ip_t
 *parse_data(char *data, int data_len)
 {
-	vtep_ip_t *ip = NULL;
+	red_ip_t *ip = NULL;
 	msgpack_zone *mempool = (msgpack_zone*)malloc(sizeof(msgpack_zone));
 	msgpack_object deserialized;
 
@@ -55,12 +55,12 @@ static vtep_ip_t
 void
 handle_ip_add(api_client_t *client, msgxchng_request_t *req)
 {
-	vtep_ip_t *ip;
+	red_ip_t *ip;
 	msgxchng_response_t *res;
 
 	ip = parse_data(req->data, req->data_len);
 	if (validate_ip(ip)) {
-		if (add_vtep_ip(ip) == 0) {
+		if (add_red_ip(ip) == 0) {
 			reply_success(client, req);
 			save_ips();
 		} else {

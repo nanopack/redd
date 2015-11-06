@@ -24,8 +24,8 @@
  * Copyright 2013 Pagoda Box, Inc.  All rights reserved.
  */
 
-#ifndef VTEPD_HELPER_H
-#define VTEPD_HELPER_H
+#ifndef REDD_HELPER_H
+#define REDD_HELPER_H
 
 #include <msgpack.h>
 #include <stdint.h>

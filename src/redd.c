@@ -35,7 +35,7 @@
 
 #include "api.h"
 #include "config.h"
-#include "vtepd.h"
+#include "redd.h"
 #include "log.h"
 #include "node.h"
 #include "ip.h"
@@ -43,7 +43,7 @@
 #include "route.h"
 
 /* server global state */
-vtep_server_t server; 
+red_server_t server; 
 
 static char
 *human_readable(double value,int in_bits)
@@ -94,7 +94,7 @@ daemonize(void)
 	if (fork() != 0) exit(0); /* parent exits */
 	setsid(); /* create a new session */
 
-	/* Every output goes to /dev/null. If VTEP is daemonized but
+	/* Every output goes to /dev/null. If RED is daemonized but
 	* the 'logfile' is set to 'stdout' in the configuration file
 	* it will not log at all. */
 	if ((fd = open("/dev/null", O_RDWR, 0)) != -1) {
@@ -108,27 +108,27 @@ daemonize(void)
 static void
 version(void)
 {
-	printf("VTEP server v%s\n", VTEPD_VERSION);
+	printf("RED server v%s\n", REDD_VERSION);
 	exit(0);
 }
 
 static void
 usage(void)
 {
-	fprintf(stderr,"Usage: vtep [/path/to/vtep.conf] [options]\n");
-	fprintf(stderr,"       vtep - (read config from stdin)\n");
-	fprintf(stderr,"       vtep -v or --version\n");
-	fprintf(stderr,"       vtep -h or --help\n\n");
+	fprintf(stderr,"Usage: red [/path/to/red.conf] [options]\n");
+	fprintf(stderr,"       red - (read config from stdin)\n");
+	fprintf(stderr,"       red -v or --version\n");
+	fprintf(stderr,"       red -h or --help\n\n");
 	fprintf(stderr,"Examples:\n");
-	fprintf(stderr,"       vtep (run the server with default conf)\n");
-	fprintf(stderr,"       vtep /etc/vtep/4000.conf\n");
-	fprintf(stderr,"       vtep --port 7777\n");
-	fprintf(stderr,"       vtep /etc/myvtep.conf --loglevel verbose\n\n");
+	fprintf(stderr,"       red (run the server with default conf)\n");
+	fprintf(stderr,"       red /etc/red/4000.conf\n");
+	fprintf(stderr,"       red --port 7777\n");
+	fprintf(stderr,"       red /etc/myred.conf --loglevel verbose\n\n");
 	exit(1);
 }
 
 static void
-vtep_set_proc_title(char *title)
+red_set_proc_title(char *title)
 {
 #ifdef USE_SETPROCTITLE
 	setproctitle("%s %s:%d",
@@ -141,7 +141,7 @@ vtep_set_proc_title(char *title)
 static void
 signal_handler(uv_signal_t* handle, int signum)
 {
-	vtep_log(VTEPD_DEBUG, "Caught a signal");
+	red_log(REDD_DEBUG, "Caught a signal");
 	uv_signal_stop(handle);
 	shutdown_api();
 
@@ -214,7 +214,7 @@ main(int argc, char **argv)
 		if (configfile)
 			server.configfile = getAbsolutePath(configfile);
 	} else {
-		vtep_log(VTEPD_WARNING, "Warning: no config file specified, using the default config. In order to specify a config file use %s /path/to/vtep.conf", argv[0]);
+		red_log(REDD_WARNING, "Warning: no config file specified, using the default config. In order to specify a config file use %s /path/to/red.conf", argv[0]);
 	}
 	if (server.daemonize) daemonize();
 	init_server();
@@ -222,15 +222,15 @@ main(int argc, char **argv)
 		init_routing();
 	init_api();
 	if (server.daemonize) create_pidfile();
-	vtep_set_proc_title(argv[0]);
+	red_set_proc_title(argv[0]);
 
 	load_ips();
 	load_nodes();
 
-	vtep_log(VTEPD_WARNING, "Server started, VTEP version " VTEPD_VERSION);
+	red_log(REDD_WARNING, "Server started, RED version " REDD_VERSION);
 
 	if (server.ipfd_count > 0)
-		vtep_log(VTEPD_NOTICE, "The server is now ready to accept connections on port %d", server.port);
+		red_log(REDD_NOTICE, "The server is now ready to accept connections on port %d", server.port);
 
 	uv_run(server.loop, UV_RUN_DEFAULT);
 

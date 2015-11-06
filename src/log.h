@@ -28,19 +28,19 @@
 #define LOG_H
 
 /* Log levels */
-#define VTEPD_DEBUG				0
-#define VTEPD_VERBOSE			1
-#define VTEPD_NOTICE				2
-#define VTEPD_WARNING			3
-#define VTEPD_LOG_RAW			(1<<10)	/* Modifier to log without timestamp */
-#define VTEPD_DEFAULT_VERBOSITY	VTEPD_NOTICE
-#define VTEPD_MAX_LOGMSG_LEN		1024	/* Default maximum length of syslog messages */
+#define REDD_DEBUG				0
+#define REDD_VERBOSE			1
+#define REDD_NOTICE				2
+#define REDD_WARNING			3
+#define REDD_LOG_RAW			(1<<10)	/* Modifier to log without timestamp */
+#define REDD_DEFAULT_VERBOSITY	REDD_NOTICE
+#define REDD_MAX_LOGMSG_LEN		1024	/* Default maximum length of syslog messages */
 
 #ifdef __GNUC__
-void	vtep_log(int level, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
+void	red_log(int level, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
 #else
-void	vtep_log(int level, const char *fmt, ...);
+void	red_log(int level, const char *fmt, ...);
 #endif
-void	vtep_logRaw(int level, const char *msg);
+void	red_logRaw(int level, const char *msg);
 
 #endif

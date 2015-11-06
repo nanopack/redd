@@ -1,24 +1,24 @@
-# VTEPD
+# REDD
 
-## What is VTEPD?
+## What is REDD?
 Vtepd is a management plain for the Linux vxlan module. The Linux vxlan module can use multicast to auto-discover peers, and send broadcast packets (like arp requests). Many datacenters don't handle multicast traffic very well when hosts are on different network segments. The other method is to seed the forwarding database with the location to find the IPs. This doesn't work very well if you want to have IPs switch between machines. Vtepd is a compromise between the two. Vtepd listens for multicast packets and sends a copy of it out to each node in a list allowing hosts that can't multicast to each other to talk to each other. This allows arp requests and other broadcast packets to be delivered to each host that needs them.
 
-## How to use VTEPD:
+## How to use REDD:
 
 ### Usage
-    Usage: vtep [/path/to/vtep.conf] [options]
-           vtep - (read config from stdin)
-           vtep -v or --version
-           vtep -h or --help
+    Usage: red [/path/to/red.conf] [options]
+           red - (read config from stdin)
+           red -v or --version
+           red -h or --help
     Examples:
-           vtep (run the server with default conf)
-           vtep /etc/vtep/4000.conf
-           vtep --port 7777
-           vtep /etc/myvtep.conf --loglevel verbose
+           red (run the server with default conf)
+           red /etc/red/4000.conf
+           red --port 7777
+           red /etc/myred.conf --loglevel verbose
     
 ### Configuration options
 
-The following things can be set in the vtepd configuration file:
+The following things can be set in the redd configuration file:
 
 - pidfile
 - daemonize
@@ -42,7 +42,7 @@ The following things can be set in the vtepd configuration file:
 - vxlan-interface
 
 #### pidfile
-Path to file where a pidfile is stored. Defaults to "/var/run/vtep.pid".
+Path to file where a pidfile is stored. Defaults to "/var/run/red.pid".
 #### daemonize
 Start up as a daemonized background process. Options are "yes" and "no". Defaults to "no".
 #### loglevel
@@ -52,7 +52,7 @@ Path to file where to output logs. Outputs to stdout if empty. Defaults to stdou
 #### syslog-enabled
 Send logs to syslog. Options are "yes" and "no". Defaults to "no".
 #### syslog-ident
-Identifier string for syslog. Defaults to "vtep".
+Identifier string for syslog. Defaults to "red".
 #### syslog-facility
 Syslog facility to use. Options are "USER", "LOCAL0", "LOCAL1", "LOCAL2", "LOCAL3", "LOCAL4", "LOCAL5", "LOCAL6", and "LOCAL7". Defaults to "LOCAL0".
 #### port
@@ -70,7 +70,7 @@ Receive buffer size. Defaults to "114688".
 #### udp-send-buf
 Send buffer size. Defaults to "114688".
 #### save-path
-Path to directory to save data for IPs and host nodes. Defaults to "/var/db/vtep/".
+Path to directory to save data for IPs and host nodes. Defaults to "/var/db/red/".
 #### vxlan-name
 Name of the vxlan interface. Defaults to "vxlan0".
 #### vxlan-vni

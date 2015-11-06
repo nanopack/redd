@@ -24,8 +24,8 @@
  * Copyright 2013 Pagoda Box, Inc.  All rights reserved.
  */
 
-#ifndef VTEPD_VXLAN_H
-#define VTEPD_VXLAN_H
+#ifndef REDD_VXLAN_H
+#define REDD_VXLAN_H
 
 int init_vxlan();
 void shutdown_vxlan();

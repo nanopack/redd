@@ -23,8 +23,8 @@
 /*
  * Copyright 2015 Pagoda Box, Inc.  All rights reserved.
  */
-#ifndef VTEPD_TUN_H
-#define VTEPD_TUN_H
+#ifndef REDD_TUN_H
+#define REDD_TUN_H
 
 int init_tun();
 void shutdown_tun();

@@ -33,30 +33,30 @@
 #include "log.h"
 #include "util/adlist.h"
 #include "util/cmd.h"
-#include "vtepd.h"
+#include "redd.h"
 
 void *dup_ip(void *ptr)
 {
-	vtep_ip_t *vtep_ip = malloc(sizeof(vtep_ip_t));
-	vtep_ip_t *orig = (vtep_ip_t *)ptr;
-	vtep_ip->ip_address = strdup(orig->ip_address);
-	return (void *)vtep_ip;
+	red_ip_t *red_ip = malloc(sizeof(red_ip_t));
+	red_ip_t *orig = (red_ip_t *)ptr;
+	red_ip->ip_address = strdup(orig->ip_address);
+	return (void *)red_ip;
 }
 
 void free_ip(void *ptr)
 {
-	vtep_ip_t *vtep_ip = (vtep_ip_t *)ptr;
-	if (vtep_ip->ip_address) {
-		free(vtep_ip->ip_address);
+	red_ip_t *red_ip = (red_ip_t *)ptr;
+	if (red_ip->ip_address) {
+		free(red_ip->ip_address);
 	}
-	free(vtep_ip);
+	free(red_ip);
 }
 
 int match_ip(void *ptr, void *key)
 {
-	vtep_ip_t *vtep_ip = (vtep_ip_t *)ptr;
-	vtep_ip_t *vtep_key = (vtep_ip_t *)key;
-	if (strcmp(vtep_ip->ip_address, vtep_key->ip_address) == 0) {
+	red_ip_t *red_ip = (red_ip_t *)ptr;
+	red_ip_t *red_key = (red_ip_t *)key;
+	if (strcmp(red_ip->ip_address, red_key->ip_address) == 0) {
 		return 1;
 	} else {
 		return 0;
@@ -64,7 +64,7 @@ int match_ip(void *ptr, void *key)
 }
 
 void
-pack_ip(msgpack_packer *packer, vtep_ip_t *ip)
+pack_ip(msgpack_packer *packer, red_ip_t *ip)
 {
 	msgpack_pack_map(packer, 1);
 	msgpack_pack_key_value(packer, "ip_address", 10, ip->ip_address, (int)strlen(ip->ip_address));
@@ -75,30 +75,30 @@ pack_ips(msgpack_packer *packer)
 {
 	listIter *iterator	= listGetIterator(server.ips, AL_START_HEAD);
 	listNode *list_node	= NULL;
-	vtep_ip_t *ip = NULL;
+	red_ip_t *ip = NULL;
 	msgpack_pack_raw(packer, 12);
 	msgpack_pack_raw_body(packer, "ip_addresses", 12);
 	msgpack_pack_array(packer, listLength(server.ips));
 	while ((list_node = listNext(iterator)) != NULL) {
-		ip = (vtep_ip_t *)list_node->value;
+		ip = (red_ip_t *)list_node->value;
 		pack_ip(packer, ip);
 	}
 	listReleaseIterator(iterator);
 }
 
 static void
-init_ip(vtep_ip_t *ip)
+init_ip(red_ip_t *ip)
 {
 	ip->ip_address = NULL;
 }
 
-vtep_ip_t
+red_ip_t
 *unpack_ip(msgpack_object object)
 {
 	if (object.type != MSGPACK_OBJECT_MAP)
 		return NULL;
 
-	vtep_ip_t *ip = malloc(sizeof(vtep_ip_t));
+	red_ip_t *ip = malloc(sizeof(red_ip_t));
 	init_ip(ip);
 
 	msgpack_object_kv* p    = object.via.map.ptr;
@@ -131,12 +131,12 @@ unpack_ips(msgpack_object object)
 		if (p->key.type == MSGPACK_OBJECT_RAW && p->val.type == MSGPACK_OBJECT_ARRAY) {
 			if (!strncmp(p->key.via.raw.ptr, "ip_addresses", p->key.via.raw.size)) {
 				if(p->val.type == MSGPACK_OBJECT_ARRAY) {
-					vtep_ip_t *ip;
+					red_ip_t *ip;
 
 					for (int i = 0; i < p->val.via.array.size; i++) {
 						ip = unpack_ip(p->val.via.array.ptr[i]);
 						if (ip) {
-							add_vtep_ip(ip);
+							add_red_ip(ip);
 						}
 					}
 				}
@@ -170,7 +170,7 @@ vxlan_has_ip(char *ip_address)
 }
 
 int
-validate_ip(vtep_ip_t *ip)
+validate_ip(red_ip_t *ip)
 {
 	if (ip != NULL && validate_ip_address(ip->ip_address))
 		return 1;
@@ -179,7 +179,7 @@ validate_ip(vtep_ip_t *ip)
 }
 
 int
-add_vtep_ip(vtep_ip_t *ip)
+add_red_ip(red_ip_t *ip)
 {
 	int ret = 0;
 	listNode *node;
@@ -191,7 +191,7 @@ add_vtep_ip(vtep_ip_t *ip)
 		if (ret == 0) {
 			listAddNodeTail(server.ips, (void *)ip);
 		} else {
-			vtep_log(VTEPD_WARNING, "unable to add ip");
+			red_log(REDD_WARNING, "unable to add ip");
 			free_ip(ip);
 		}
 	} else {
@@ -201,7 +201,7 @@ add_vtep_ip(vtep_ip_t *ip)
 }
 
 int
-remove_vtep_ip(vtep_ip_t *key)
+remove_red_ip(red_ip_t *key)
 {
 	int ret = 0;
 	listNode *node;

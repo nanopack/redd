@@ -24,8 +24,8 @@
  * Copyright 2013 Pagoda Box, Inc.  All rights reserved.
  */
 
-#ifndef VTEPD_UDP_H
-#define VTEPD_UDP_H
+#ifndef REDD_UDP_H
+#define REDD_UDP_H
 
 void init_udp();
 void shutdown_udp();

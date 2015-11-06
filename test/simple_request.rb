@@ -66,7 +66,7 @@ class Connection
   end
 end
  
-host = 'vtep.local'
+host = 'red.local'
 port = '4470'
 
 connection = Connection.new host, port, false

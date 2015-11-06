@@ -24,8 +24,8 @@
  * Copyright 2013 Pagoda Box, Inc.  All rights reserved.
  */
 
-#ifndef VTEPD_API_NODE_ADD_H
-#define VTEPD_API_NODE_ADD_H
+#ifndef REDD_API_NODE_ADD_H
+#define REDD_API_NODE_ADD_H
 
 #include <msgxchng.h>
 

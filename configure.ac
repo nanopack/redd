@@ -2,9 +2,9 @@
 
 AC_PREREQ(2.61)
 
-AC_INIT([vtepd], [0.0.2])
+AC_INIT([redd], [0.0.2])
 AM_INIT_AUTOMAKE([foreign subdir-objects])
-AC_CONFIG_SRCDIR([src/vtepd.c])
+AC_CONFIG_SRCDIR([src/redd.c])
 
 AC_PROG_CC
 AC_PROG_CC_STDC

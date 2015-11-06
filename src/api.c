@@ -35,7 +35,7 @@
 
 #include "api.h"
 #include "log.h"
-#include "vtepd.h"
+#include "redd.h"
 
 #include "api/ip_add.h"
 #include "api/ip_list.h"
@@ -191,7 +191,7 @@ reply_success(api_client_t *client, msgxchng_request_t *req)
 static void
 handle_unknown_command(api_client_t *client, msgxchng_request_t *req)
 {
-	vtep_log(VTEPD_DEBUG, "unknown command: %s", req->command);
+	red_log(REDD_DEBUG, "unknown command: %s", req->command);
 }
 
 static void
@@ -274,11 +274,11 @@ static void
 on_connect(uv_stream_t* listener, int status)
 {
 	if (status == -1) {
-		vtep_log(VTEPD_WARNING, "connect attempt failed");
+		red_log(REDD_WARNING, "connect attempt failed");
 		return;
 	}
 
-	vtep_log(VTEPD_DEBUG, "connection established");
+	red_log(REDD_DEBUG, "connection established");
 
 	uv_tcp_t *proto = (uv_tcp_t *) malloc(sizeof(uv_tcp_t));
 	if (uv_tcp_init(server.loop, proto) == UV_OK) {
@@ -288,7 +288,7 @@ on_connect(uv_stream_t* listener, int status)
 
 		if (!((uv_accept(listener, client->stream) == UV_OK) &&
 				(uv_read_start(client->stream, read_alloc_buffer, on_read) == UV_OK))) {
-			vtep_log(VTEPD_WARNING, "WARNING: Need to free data here, memory leaks ahoy!");
+			red_log(REDD_WARNING, "WARNING: Need to free data here, memory leaks ahoy!");
 		}
 	}
 
@@ -301,7 +301,7 @@ free_uv_tcp(uv_handle_t* handle)
 }
 
 /* Initialize a set of file descriptors to listen to the specified 'port'
- * binding the addresses specified in the VTEP server configuration.
+ * binding the addresses specified in the RED server configuration.
  *
  * The listening file descriptors are stored in the integer array 'fds'
  * and their number is set in '*count'.
@@ -311,9 +311,9 @@ free_uv_tcp(uv_handle_t* handle)
  * contains no specific addresses to bind, this function will try to
  * bind * (all addresses) for both the IPv4 and IPv6 protocols.
  *
- * On success the function returns VTEPD_OK.
+ * On success the function returns REDD_OK.
  *
- * On error the function returns VTEPD_ERR. For the function to be on
+ * On error the function returns REDD_ERR. For the function to be on
  * error, at least one of the server.bindaddr addresses was
  * impossible to bind, or no bind addresses were specified in the server
  * configuration but the function is not able to bind * for at least
@@ -380,28 +380,28 @@ listen_to_port(int port, uv_tcp_t *fds[], int *count)
 			}
 		}
 		if (fds[*count] == NULL) {
-			vtep_log(VTEPD_WARNING,
+			red_log(REDD_WARNING,
 				"Creating Server TCP listening socket %s:%d: %s (%s)",
 				server.bindaddr[j] ? server.bindaddr[j] : "*",
 				server.port, uv_strerror(uv_last_error(server.loop)),
 				uv_err_name(uv_last_error(server.loop)));
-			return VTEPD_ERR;
+			return REDD_ERR;
 		}
 		(*count)++;
 	}
-	return VTEPD_OK;
+	return REDD_OK;
 }
 
 void
 init_api(void)
 {
 	/* Open the TCP listening socket for the user commands. */
-	if (listen_to_port(server.port, server.ipfd, &server.ipfd_count) == VTEPD_ERR)
+	if (listen_to_port(server.port, server.ipfd, &server.ipfd_count) == REDD_ERR)
 		exit(1);
 
 	/* Abort if there are no listening sockets at all. */
 	if (server.ipfd_count == 0) {
-		vtep_log(VTEPD_WARNING, "Configured to not listen anywhere, exiting.");
+		red_log(REDD_WARNING, "Configured to not listen anywhere, exiting.");
 		exit(1);
 	}
 }
@@ -419,6 +419,6 @@ close_ports()
 void
 shutdown_api()
 {
-	vtep_log(VTEPD_DEBUG, "Shutting down API");
+	red_log(REDD_DEBUG, "Shutting down API");
 	close_ports();
 }

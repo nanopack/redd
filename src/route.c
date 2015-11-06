@@ -43,21 +43,21 @@
 #include "tun.h"
 #include "udp.h"
 #include "util/adlist.h"
-#include "vtepd.h"
+#include "redd.h"
 #include "vxlan.h"
 
 static void
-send_to_vtep(vtep_node_t *vtep, char *frame, int len)
+send_to_red(red_node_t *red, char *frame, int len)
 {
 	async_io_buf_t *buf = async_io_write_buf_get(&server.udp_async_io);
 	if (buf == NULL)
 		return;
 	if (len > buf->maxlen) {
-		vtep_log(VTEPD_DEBUG, "packet is larger than buffer");
+		red_log(REDD_DEBUG, "packet is larger than buffer");
 		return;
 	}
 
-	buf->addr = vtep->send_addr;
+	buf->addr = red->send_addr;
 	memcpy(buf->buf, frame, len);
 	buf->len = len;
 	ngx_queue_insert_tail(&server.udp_async_io.write_io.ready_queue,&buf->queue);
@@ -70,7 +70,7 @@ do_broadcast(char *frame, int len)
 	listIter *iter = listGetIterator(server.nodes, AL_START_HEAD);
 	listNode *node;
 	while ((node = listNext(iter)) != NULL) {
-		send_to_vtep((vtep_node_t *)node->value, frame, len);
+		send_to_red((red_node_t *)node->value, frame, len);
 	}
 	listReleaseIterator(iter);
 }
@@ -93,7 +93,7 @@ handle_local_frame(char *frame, int len)
 			printf("%c", frame[i]);
 		}
 		printf("\n");
-		vtep_log(VTEPD_DEBUG, "lengths didn't add up");
+		red_log(REDD_DEBUG, "lengths didn't add up");
 	}
 }
 
@@ -108,7 +108,7 @@ init_routing()
 void
 shutdown_routing()
 {
-	vtep_log(VTEPD_DEBUG, "Shutting down routing");
+	red_log(REDD_DEBUG, "Shutting down routing");
 	shutdown_tun();
 	shutdown_udp();
 	shutdown_vxlan();

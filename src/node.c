@@ -34,31 +34,31 @@
 #include "helper.h"
 #include "log.h"
 #include "util/adlist.h"
-#include "vtepd.h"
+#include "redd.h"
 
 void *dup_node(void *ptr)
 {
-	vtep_node_t *vtep_node = malloc(sizeof(vtep_node_t));
-	vtep_node_t *orig = (vtep_node_t *)ptr;
-	vtep_node->hostname = strdup(orig->hostname);
-	vtep_node->send_addr = orig->send_addr;
-	return (void *)vtep_node;
+	red_node_t *red_node = malloc(sizeof(red_node_t));
+	red_node_t *orig = (red_node_t *)ptr;
+	red_node->hostname = strdup(orig->hostname);
+	red_node->send_addr = orig->send_addr;
+	return (void *)red_node;
 }
 
 void free_node(void *ptr)
 {
-	vtep_node_t *vtep_node = (vtep_node_t *)ptr;
-	if (vtep_node->hostname) {
-		free(vtep_node->hostname);
+	red_node_t *red_node = (red_node_t *)ptr;
+	if (red_node->hostname) {
+		free(red_node->hostname);
 	}
-	free(vtep_node);
+	free(red_node);
 }
 
 int match_node(void *ptr, void *key)
 {
-	vtep_node_t *vtep_node = (vtep_node_t *)ptr;
-	vtep_node_t *vtep_key = (vtep_node_t *)key;
-	if (strcmp(vtep_node->hostname, vtep_key->hostname) == 0) {
+	red_node_t *red_node = (red_node_t *)ptr;
+	red_node_t *red_key = (red_node_t *)key;
+	if (strcmp(red_node->hostname, red_key->hostname) == 0) {
 		return 1;
 	} else {
 		return 0;
@@ -66,7 +66,7 @@ int match_node(void *ptr, void *key)
 }
 
 void
-pack_node(msgpack_packer *packer, vtep_node_t *node)
+pack_node(msgpack_packer *packer, red_node_t *node)
 {
 	msgpack_pack_map(packer, 1);
 	msgpack_pack_key_value(packer, "node", 4, node->hostname, (int)strlen(node->hostname));
@@ -77,31 +77,31 @@ pack_nodes(msgpack_packer *packer)
 {
 	listIter *iterator	= listGetIterator(server.nodes, AL_START_HEAD);
 	listNode *list_node	= NULL;
-	vtep_node_t *node = NULL;
+	red_node_t *node = NULL;
 	msgpack_pack_raw(packer, 5);
 	msgpack_pack_raw_body(packer, "nodes", 5);
 	msgpack_pack_array(packer, listLength(server.nodes));
 	while ((list_node = listNext(iterator)) != NULL) {
-		node = (vtep_node_t *)list_node->value;
+		node = (red_node_t *)list_node->value;
 		pack_node(packer, node);
 	}
 	listReleaseIterator(iterator);
 }
 
 static void
-init_node(vtep_node_t *node)
+init_node(red_node_t *node)
 {
 	node->hostname = NULL;
 	memset(&node->send_addr, 0, sizeof(struct sockaddr_in));
 }
 
-vtep_node_t
+red_node_t
 *unpack_node(msgpack_object object)
 {
 	if (object.type != MSGPACK_OBJECT_MAP)
 		return NULL;
 
-	vtep_node_t *node = malloc(sizeof(vtep_node_t));
+	red_node_t *node = malloc(sizeof(red_node_t));
 	init_node(node);
 
 	msgpack_object_kv* p    = object.via.map.ptr;
@@ -134,12 +134,12 @@ unpack_nodes(msgpack_object object)
 		if (p->key.type == MSGPACK_OBJECT_RAW && p->val.type == MSGPACK_OBJECT_ARRAY) {
 			if (!strncmp(p->key.via.raw.ptr, "nodes", p->key.via.raw.size)) {
 				if(p->val.type == MSGPACK_OBJECT_ARRAY) {
-					vtep_node_t *node;
+					red_node_t *node;
 
 					for (int i = 0; i < p->val.via.array.size; i++) {
 						node = unpack_node(p->val.via.array.ptr[i]);
 						if (node) {
-							add_vtep_node(node);
+							add_red_node(node);
 						}
 					}
 				}
@@ -161,7 +161,7 @@ load_nodes()
 }
 
 int
-validate_node(vtep_node_t *node)
+validate_node(red_node_t *node)
 {
 	if (node != NULL && validate_host(node->hostname))
 		return 1;
@@ -170,7 +170,7 @@ validate_node(vtep_node_t *node)
 }
 
 void
-add_vtep_node(vtep_node_t *node)
+add_red_node(red_node_t *node)
 {
 	if (listSearchKey(server.nodes, node) == NULL) {
 		node->send_addr = uv_ip4_addr(node->hostname, atoi(server.vxlan_port));
@@ -181,7 +181,7 @@ add_vtep_node(vtep_node_t *node)
 }
 
 void
-remove_vtep_node(vtep_node_t *key)
+remove_red_node(red_node_t *key)
 {
 	listNode *node;
 	if ((node = listSearchKey(server.nodes, key)) != NULL) {

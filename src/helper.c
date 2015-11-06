@@ -37,7 +37,7 @@
 #include "log.h"
 #include "util/cmd.h"
 #include "helper.h"
-#include "vtepd.h"
+#include "redd.h"
 
 void 
 msgpack_pack_key_value(msgpack_packer *packer, char *key, int key_len, char *value, int value_len)
@@ -157,7 +157,7 @@ save_data(char *filename, save_data_function pack_function)
 	FILE *save_file;
 
 	if ((save_file_name = get_save_file_path(filename)) == NULL) {
-		vtep_log(VTEPD_WARNING, "get_save_file_path returned NULL");
+		red_log(REDD_WARNING, "get_save_file_path returned NULL");
 		return;
 	}
 
@@ -174,10 +174,10 @@ save_data(char *filename, save_data_function pack_function)
 		written = fwrite((void *)&buffer->data[0], 1, buffer->size, save_file);
 		fclose(save_file);
 		if (written != buffer->size) {
-			vtep_log(VTEPD_WARNING, "Failed to write to %s", save_file_name);
+			red_log(REDD_WARNING, "Failed to write to %s", save_file_name);
 		}
 	} else {
-		vtep_log(VTEPD_WARNING, "Failed to open %s", save_file_name);
+		red_log(REDD_WARNING, "Failed to open %s", save_file_name);
 	}
 
 	free(save_file_name);
@@ -200,7 +200,7 @@ load_data(char *filename, load_data_function unpack_function)
 	msgpack_object deserialized;
 
 	if ((save_file_name = get_save_file_path(filename)) == NULL) {
-		vtep_log(VTEPD_WARNING, "get_save_file_path returned NULL");
+		red_log(REDD_WARNING, "get_save_file_path returned NULL");
 		return;
 	}
 	if (stat(save_file_name, &file_stat) != 0) {
@@ -218,13 +218,13 @@ load_data(char *filename, load_data_function unpack_function)
 		bytes_read = fread((void *)save_data, 1, len, save_file);
 		fclose(save_file);
 		if (bytes_read != len) {
-			vtep_log(VTEPD_WARNING, "Failed to read data from %s", save_file_name);
+			red_log(REDD_WARNING, "Failed to read data from %s", save_file_name);
 			free(save_file_name);
 			free(save_data);
 			return;
 		}
 	} else {
-		vtep_log(VTEPD_WARNING, "Failed to open %s", save_file_name);
+		red_log(REDD_WARNING, "Failed to open %s", save_file_name);
 		free(save_file_name);
 		return;
 	}

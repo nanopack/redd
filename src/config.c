@@ -32,7 +32,7 @@
 
 #include "ip.h"
 #include "node.h"
-#include "vtepd.h"
+#include "redd.h"
 #include "vxlan.h"
 #include "log.h"
 #include "util/sds.h"		/* dynamic safe strings */
@@ -103,10 +103,10 @@ load_server_config_from_string(char *config)
 				err = "argument must be 'yes' or 'no'"; goto loaderr;
 			}
 		} else if (!strcasecmp(argv[0],"loglevel") && argc == 2) {
-			if (!strcasecmp(argv[1],"debug")) server.verbosity = VTEPD_DEBUG;
-			else if (!strcasecmp(argv[1],"verbose")) server.verbosity = VTEPD_VERBOSE;
-			else if (!strcasecmp(argv[1],"notice")) server.verbosity = VTEPD_NOTICE;
-			else if (!strcasecmp(argv[1],"warning")) server.verbosity = VTEPD_WARNING;
+			if (!strcasecmp(argv[1],"debug")) server.verbosity = REDD_DEBUG;
+			else if (!strcasecmp(argv[1],"verbose")) server.verbosity = REDD_VERBOSE;
+			else if (!strcasecmp(argv[1],"notice")) server.verbosity = REDD_NOTICE;
+			else if (!strcasecmp(argv[1],"warning")) server.verbosity = REDD_WARNING;
 			else {
 				err = "Invalid log level. Must be one of debug, notice, warning";
 				goto loaderr;
@@ -156,7 +156,7 @@ load_server_config_from_string(char *config)
 		} else if (!strcasecmp(argv[0],"bind") && argc >= 2) {
 			int j, addresses = argc-1;
 
-			if (addresses > VTEPD_BINDADDR_MAX) {
+			if (addresses > REDD_BINDADDR_MAX) {
 				err = "Too many bind addresses specified"; goto loaderr;
 			}
 			for (j = 0; j < addresses; j++) {
@@ -224,24 +224,24 @@ init_server_config(void)
 {
 	/* General */
 	server.configfile			= NULL;
-	server.pidfile				= strdup(VTEPD_DEFAULT_PID_FILE);
-	server.daemonize			= VTEPD_DEFAULT_DAEMONIZE;
+	server.pidfile				= strdup(REDD_DEFAULT_PID_FILE);
+	server.daemonize			= REDD_DEFAULT_DAEMONIZE;
 
 	/* Logging */
-	server.verbosity			= VTEPD_DEFAULT_VERBOSITY;
-	server.logfile				= strdup(VTEPD_DEFAULT_LOGFILE);
-	server.syslog_enabled		= VTEPD_DEFAULT_SYSLOG_ENABLED;
-	server.syslog_ident			= strdup(VTEPD_DEFAULT_SYSLOG_IDENT);
+	server.verbosity			= REDD_DEFAULT_VERBOSITY;
+	server.logfile				= strdup(REDD_DEFAULT_LOGFILE);
+	server.syslog_enabled		= REDD_DEFAULT_SYSLOG_ENABLED;
+	server.syslog_ident			= strdup(REDD_DEFAULT_SYSLOG_IDENT);
 	server.syslog_facility		= LOG_LOCAL0;
 
 	/* Networking */
-	server.port					= VTEPD_DEFAULT_SERVERPORT;
+	server.port					= REDD_DEFAULT_SERVERPORT;
 	server.ipfd_count			= 0;
-	server.maxidletime			= VTEPD_DEFAULT_MAXIDLETIME;
-	server.routing_enabled		= VTEPD_DEFAULT_ROUTING_ENABLED;
+	server.maxidletime			= REDD_DEFAULT_MAXIDLETIME;
+	server.routing_enabled		= REDD_DEFAULT_ROUTING_ENABLED;
 	server.udp_listen_address	= strdup("localhost");
-	server.udp_recv_buf			= VTEPD_DEFAULT_UDP_RECV_BUF;
-	server.udp_send_buf			= VTEPD_DEFAULT_UDP_SEND_BUF;
+	server.udp_recv_buf			= REDD_DEFAULT_UDP_RECV_BUF;
+	server.udp_send_buf			= REDD_DEFAULT_UDP_SEND_BUF;
 
 	/* Database */
 	server.nodes				= listCreate();
@@ -259,10 +259,10 @@ init_server_config(void)
 	server.vxlan_group			= strdup("239.0.0.1");
 	server.vxlan_port			= strdup("8472");
 	server.vxlan_interface		= strdup("eth0");
-	server.vxlan_max_retries	= VTEPD_DEFAULT_VXLAN_MAX_RETRIES;
+	server.vxlan_max_retries	= REDD_DEFAULT_VXLAN_MAX_RETRIES;
 
 	/* Save */
-	server.save_path			= strdup(VTEPD_DEFAULT_SAVE_PATH);
+	server.save_path			= strdup(REDD_DEFAULT_SAVE_PATH);
 }
 
 /* Load the server configuration from the specified filename.
@@ -276,7 +276,7 @@ void
 load_server_config(char *filename, char *options)
 {
 	sds config = sdsempty();
-	char buf[VTEPD_CONFIGLINE_MAX+1];
+	char buf[REDD_CONFIGLINE_MAX+1];
 
 	/* Load the file content */
 	if (filename) {
@@ -286,12 +286,12 @@ load_server_config(char *filename, char *options)
 			fp = stdin;
 		} else {
 			if ((fp = fopen(filename,"r")) == NULL) {
-				vtep_log(VTEPD_WARNING,
+				red_log(REDD_WARNING,
 					"Fatal error, can't open config file '%s'", filename);
 				exit(1);
 			}
 		}
-		while(fgets(buf,VTEPD_CONFIGLINE_MAX+1,fp) != NULL)
+		while(fgets(buf,REDD_CONFIGLINE_MAX+1,fp) != NULL)
 			config = sdscat(config,buf);
 		if (fp != stdin) fclose(fp);
 	}
@@ -308,7 +308,7 @@ void
 clean_server_config()
 {
 	/* General */
-	vtep_log(VTEPD_DEBUG, "Cleaning config");
+	red_log(REDD_DEBUG, "Cleaning config");
 	if (server.configfile)
 		sdsfree(server.configfile);
 	server.configfile = NULL;

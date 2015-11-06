@@ -33,7 +33,7 @@
 #include "ip.h"
 #include "log.h"
 #include "node.h"
-#include "vtepd.h"
+#include "redd.h"
 
 static char
 *generate_data(int *size)
@@ -88,7 +88,7 @@ void
 handle_status(api_client_t *client, msgxchng_request_t *req)
 {
 	msgxchng_response_t *res = node_generate_response(req);
-	vtep_log(VTEPD_DEBUG, "request %s: status", req->id);
+	red_log(REDD_DEBUG, "request %s: status", req->id);
 
 	reply(client, res);
 

@@ -24,29 +24,29 @@
  * Copyright 2013 Pagoda Box, Inc.  All rights reserved.
  */
 
-#ifndef VTEPD_IP_H
-#define VTEPD_IP_H
+#ifndef REDD_IP_H
+#define REDD_IP_H
 
 #include <msgpack.h>
 
-typedef struct vtep_ip_s {
+typedef struct red_ip_s {
 	char 				*ip_address;
-} vtep_ip_t;
+} red_ip_t;
 
 void		*dup_ip(void *ptr);
 void		free_ip(void *ptr);
 int			match_ip(void *ptr, void *key);
 
-void		pack_ip(msgpack_packer *packer, vtep_ip_t *ip);
+void		pack_ip(msgpack_packer *packer, red_ip_t *ip);
 void		pack_ips(msgpack_packer *packer);
-vtep_ip_t	*unpack_ip(msgpack_object object);
+red_ip_t	*unpack_ip(msgpack_object object);
 void		unpack_ips(msgpack_object object);
-int			validate_ip(vtep_ip_t *ip);
+int			validate_ip(red_ip_t *ip);
 
 void		save_ips();
 void		load_ips();
 
-int			add_vtep_ip(vtep_ip_t *ip);
-int			remove_vtep_ip(vtep_ip_t *key);
+int			add_red_ip(red_ip_t *ip);
+int			remove_red_ip(red_ip_t *key);
 
 #endif

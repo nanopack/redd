@@ -34,7 +34,7 @@
 #include "log.h"
 #include "util/adlist.h"
 #include "util/cmd.h"
-#include "vtepd.h"
+#include "redd.h"
 #include "vxlan.h"
 
 static int
@@ -62,9 +62,9 @@ init_vxlan()
 			if ((success = run_cmd(add_link_cmd)) == 0) {
 				break;
 			} else {
-				vtep_log(VTEPD_WARNING, "Failed to create link %s", server.vxlan_name);
+				red_log(REDD_WARNING, "Failed to create link %s", server.vxlan_name);
 				sleep(1);
-				vtep_log(VTEPD_WARNING, "Retrying to create link %s", server.vxlan_name);
+				red_log(REDD_WARNING, "Retrying to create link %s", server.vxlan_name);
 			}
 		}
 	}
@@ -76,9 +76,9 @@ init_vxlan()
 		if ((success = run_cmd(set_link_cmd)) == 0)	{
 			break;
 		} else {
-			vtep_log(VTEPD_WARNING, "Failed to set link %s up", server.vxlan_name);
+			red_log(REDD_WARNING, "Failed to set link %s up", server.vxlan_name);
 			sleep(1);
-			vtep_log(VTEPD_WARNING, "Retrying to set link %s up", server.vxlan_name);
+			red_log(REDD_WARNING, "Retrying to set link %s up", server.vxlan_name);
 		}
 	}
 
@@ -89,9 +89,9 @@ init_vxlan()
 		if ((success = run_cmd(set_route_cmd)) == 0) {
 			break;
 		} else {
-			vtep_log(VTEPD_WARNING, "Failed to set route %s", server.vxlan_name);
+			red_log(REDD_WARNING, "Failed to set route %s", server.vxlan_name);
 			sleep(1);
-			vtep_log(VTEPD_WARNING, "Retrying to set route %s", server.vxlan_name);
+			red_log(REDD_WARNING, "Retrying to set route %s", server.vxlan_name);
 		}
 	}
 	return success;
@@ -100,11 +100,11 @@ init_vxlan()
 void
 shutdown_vxlan()
 {
-	vtep_log(VTEPD_DEBUG, "Shutting down VXLAN");
+	red_log(REDD_DEBUG, "Shutting down VXLAN");
 	if (vxlan_exists() == 0) {
 		char *add_link_cmd[] = {"ip", "link", "del", server.vxlan_name, 0};
 		if (run_cmd(add_link_cmd) != 0) {
-			vtep_log(VTEPD_WARNING, "Failed to remove link %s", server.vxlan_name);
+			red_log(REDD_WARNING, "Failed to remove link %s", server.vxlan_name);
 		}
 	}
 }

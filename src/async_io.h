@@ -24,8 +24,8 @@
  * Copyright 2013 Pagoda Box, Inc.  All rights reserved.
  */
 
-#ifndef VTEPD_ASYNC_IO_H
-#define VTEPD_ASYNC_IO_H
+#ifndef REDD_ASYNC_IO_H
+#define REDD_ASYNC_IO_H
 
 #include <sys/types.h>
 #include <sys/socket.h>

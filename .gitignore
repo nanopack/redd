@@ -19,4 +19,4 @@ libtool
 ltmain.sh
 configure
 test/run-tests
-src/vtep
+src/red

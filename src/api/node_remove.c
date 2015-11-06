@@ -33,10 +33,10 @@
 #include "log.h"
 #include "node.h"
 
-static vtep_node_t
+static red_node_t
 *parse_data(char *data, int data_len)
 {
-	vtep_node_t *node = NULL;
+	red_node_t *node = NULL;
 	msgpack_zone *mempool = (msgpack_zone*)malloc(sizeof(msgpack_zone));
 	msgpack_object deserialized;
 
@@ -54,12 +54,12 @@ static vtep_node_t
 void
 handle_node_remove(api_client_t *client, msgxchng_request_t *req)
 {
-	vtep_node_t *node;
+	red_node_t *node;
 	msgxchng_response_t *res;
 
 	node = parse_data(req->data, req->data_len);
 	if (validate_node(node)) {
-		remove_vtep_node(node);
+		remove_red_node(node);
 		reply_success(client, req);
 		save_nodes();
 	} else {

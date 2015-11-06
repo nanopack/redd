@@ -1,9 +1,9 @@
 # -*- mode: Makefile; tab-width: 4; indent-tabs-mode: 1; st-rulers: [70] -*-
 # vim: ts=8 sw=8 ft=Makefile noet
 
-bin_PROGRAMS = vtepd
+bin_PROGRAMS = redd
 
-vtepd_SOURCES =  \
+redd_SOURCES =  \
 	api.c api.h \
 	api/ip_add.c api/ip_add.h \
 	api/ip_list.c api/ip_list.h \
@@ -22,7 +22,7 @@ vtepd_SOURCES =  \
 	route.c route.h \
 	tun.c tun.h \
 	udp.c udp.h \
-	vtepd.c vtepd.h \
+	redd.c redd.h \
 	vxlan.c vxlan.h \
 	util/adlist.c util/adlist.h \
 	util/cmd.c util/cmd.h \

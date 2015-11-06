@@ -25,7 +25,7 @@
  */
 
 #include "log.h"
-#include "vtepd.h"
+#include "redd.h"
 
 #include <stdio.h>		/* standard buffered input/output */
 #include <stdlib.h>		/* standard library definitions */
@@ -35,15 +35,15 @@
 #include <unistd.h>		/* standard symbolic constants and types */
 
 /* Low level logging. To use only for very big messages, otherwise
- * vtep_log() is to prefer. */
+ * red_log() is to prefer. */
 void
-vtep_log_raw(int level, const char *msg)
+red_log_raw(int level, const char *msg)
 {
 	const int syslogLevelMap[] = { LOG_DEBUG, LOG_INFO, LOG_NOTICE, LOG_WARNING };
 	const char *c = ".-*#";
 	FILE *fp;
 	char buf[64];
-	int rawmode = (level & VTEPD_LOG_RAW);
+	int rawmode = (level & REDD_LOG_RAW);
 	int log_to_stdout = (server.logfile == NULL || server.logfile[0] == '\0');
 
 	level &= 0xff; /* clear flags */
@@ -69,14 +69,14 @@ vtep_log_raw(int level, const char *msg)
 	if (server.syslog_enabled) syslog(syslogLevelMap[level], "%s", msg);
 }
 
-/* Like vtep_log_raw() but with printf-alike support. This is the function that
+/* Like red_log_raw() but with printf-alike support. This is the function that
  * is used across the code. The raw version is only used in order to dump
  * the INFO output on crash. */
 void
-vtep_log(int level, const char *fmt, ...)
+red_log(int level, const char *fmt, ...)
 {
 	va_list ap;
-	char msg[VTEPD_MAX_LOGMSG_LEN];
+	char msg[REDD_MAX_LOGMSG_LEN];
 
 	if ((level&0xff) < server.verbosity) return;
 
@@ -84,5 +84,5 @@ vtep_log(int level, const char *fmt, ...)
 	vsnprintf(msg, sizeof(msg), fmt, ap);
 	va_end(ap);
 
-	vtep_log_raw(level,msg);
+	red_log_raw(level,msg);
 }

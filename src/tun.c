@@ -37,30 +37,30 @@
 #include "log.h"
 #include "route.h"
 #include "tun.h"
-#include "vtepd.h"
+#include "redd.h"
 
 static int 
 tun_read_each(void* data, async_io_buf_t* elem){
 	async_io_t *tun = (async_io_t *)data;
-	// vtep_log(VTEPD_DEBUG, "Device %i is reading into %p which has %i bytes available", tun->fd, elem, elem->maxlen);
+	// red_log(REDD_DEBUG, "Device %i is reading into %p which has %i bytes available", tun->fd, elem, elem->maxlen);
 	elem->len = read(tun->read_io.fd, elem->buf, elem->maxlen);
 	if (elem->len < 0) {
 		// we need to find out why errno is 0 sometimes
 		if (errno == EAGAIN || errno == EWOULDBLOCK) {
 			return 0;
 		}
-		// vtep_log(VTEPD_DEBUG, "Device %i returned %i", tun->fd, retval);
-		// vtep_log(VTEPD_WARNING, "FATAL ERROR: getmsg returned (%d) - (%d) %s", retval, errno, strerror(errno));
+		// red_log(REDD_DEBUG, "Device %i returned %i", tun->fd, retval);
+		// red_log(REDD_WARNING, "FATAL ERROR: getmsg returned (%d) - (%d) %s", retval, errno, strerror(errno));
 		return 0;
 	}
-	// vtep_log(VTEPD_DEBUG, "Device %i has more? %i cntl: %i data: %i", tun->fd, retval,MORECTL,MOREDATA);
+	// red_log(REDD_DEBUG, "Device %i has more? %i cntl: %i data: %i", tun->fd, retval,MORECTL,MOREDATA);
 	return 1;
 }
 
 static void 
 tun_read_done(void* data, async_io_buf_t* elem){
 	async_io_t *tun = (async_io_t *)data;
-	// vtep_log(VTEPD_DEBUG, "Sending message");
+	// red_log(REDD_DEBUG, "Sending message");
 	handle_local_frame(elem->buf, elem->len);
 }
 
@@ -73,18 +73,18 @@ static int
 tun_write_each(void* data, async_io_buf_t* elem){
 	async_io_t *tun = (async_io_t *)data;
 	int retval;
-	// vtep_log(VTEPD_DEBUG, "Device %i is writing into %p which has %i bytes available", tun->fd, elem, elem->len);
+	// red_log(REDD_DEBUG, "Device %i is writing into %p which has %i bytes available", tun->fd, elem, elem->len);
 	retval = write(tun->write_io.fd, elem->buf, elem->len);
 	if (retval < 0) {
 		// we need to find out why errno is 0 sometimes
 		if (errno == EAGAIN || errno == EWOULDBLOCK) {
 			return 0;
 		}
-		// vtep_log(VTEPD_DEBUG, "Device %i returned %i", tun->fd, retval);
-		// vtep_log(VTEPD_WARNING, "FATAL ERROR: putmsg (%d) %s", errno, strerror(errno));
+		// red_log(REDD_DEBUG, "Device %i returned %i", tun->fd, retval);
+		// red_log(REDD_WARNING, "FATAL ERROR: putmsg (%d) %s", errno, strerror(errno));
 		return 0;
 	}
-	// vtep_log(VTEPD_DEBUG, "Device %i has more? %i cntl: %i data: %i", tun->fd, retval,MORECTL,MOREDATA);
+	// red_log(REDD_DEBUG, "Device %i has more? %i cntl: %i data: %i", tun->fd, retval,MORECTL,MOREDATA);
 	return 1;
 }
 
@@ -139,7 +139,7 @@ init_tun()
 void
 shutdown_tun()
 {
-	vtep_log(VTEPD_DEBUG, "Shutting down TUN");
+	red_log(REDD_DEBUG, "Shutting down TUN");
 	async_io_shutdown(&server.tun_async_io);
 	close(server.tun_async_io.fd);
 }

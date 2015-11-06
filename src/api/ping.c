@@ -38,7 +38,7 @@ handle_ping(api_client_t *client, msgxchng_request_t *req)
 	msgxchng_response_t *res;
 	res = new_msgxchng_response(req->id, req->id_len, req->data, req->data_len, "complete", 8);
 
-	vtep_log(VTEPD_DEBUG, "request %s: ping", req->id);
+	red_log(REDD_DEBUG, "request %s: ping", req->id);
 
 	reply(client, res);
 

@@ -24,8 +24,8 @@
  * Copyright 2013 Pagoda Box, Inc.  All rights reserved.
  */
 
-#ifndef VTEPD_UTIL_CMD_H
-#define VTEPD_UTIL_CMD_H
+#ifndef REDD_UTIL_CMD_H
+#define REDD_UTIL_CMD_H
 
 int run_cmd(char* argv[]);
 
