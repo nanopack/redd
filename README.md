@@ -1,3 +1,5 @@
+[![red logo](http://nano-assets.gopagoda.io/readme-headers/red.png)](http://nanobox.io/open-source#red)
+ [![Build Status](https://travis-ci.org/nanopack/redd.svg)](https://travis-ci.org/nanopack/redd)
 # REDD
 
 ## What is REDD?
@@ -81,3 +83,5 @@ Multicast address for the vxlan interface. Defaults to "239.0.0.1".
 Port to configure the vxlan driver to use. Defaults to "8472".
 #### vxlan-interface
 Physical interface to send vxlan traffic over. Defaults to "eth0".
+
+[![open source](http://nano-assets.gopagoda.io/open-src/nanobox-open-src.png)](http://nanobox.io/open-source)

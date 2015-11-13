@@ -27,8 +27,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef __HOOKY_UTIL_H
-#define __HOOKY_UTIL_H
+#ifndef _UTIL_H
+#define _UTIL_H
 
 #include "sds.h"
 
