@@ -15,6 +15,6 @@ sudo dpkg -i /tmp/redd_1.0.0-1_amd64.deb
 sudo wget -O /etc/redd.conf https://raw.githubusercontent.com/nanopack/redd/master/redd.conf
 sudo mkdir -p /var/db/redd
 sudo redd /etc/redd.conf
-while [[ $(red ping) == "Error: Unable to connect to RED\n" ]]; do
+while [[ $(red ping) == "Error: Unable to connect to RED" ]]; do
 	sleep 1
 done
