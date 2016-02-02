@@ -5,7 +5,7 @@ dist: trusty
 
 before_install:
   - sudo apt-get -qq update
-  - sudo apt-get install -y libmsgpack3 libmsgpack-dev libuv0.10
+  - sudo apt-get install -y libmsgpack3 libmsgpack-dev libuv0.10 libuv-dev
   - wget -O /tmp/libbframe_1.0.0-1_amd64.deb https://s3.amazonaws.com/nanopack.nanobox.io/deb/libbframe_1.0.0-1_amd64.deb
   - wget -O /tmp/libmsgxchng_1.0.0-1_amd64.deb https://s3.amazonaws.com/nanopack.nanobox.io/deb/libmsgxchng_1.0.0-1_amd64.deb
   - sudo dpkg -i /tmp/libbframe_1.0.0-1_amd64.deb
