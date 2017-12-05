@@ -67,16 +67,6 @@ handle_local_frame(char *frame, int len)
 	if ((ip_header->ihl * 4) + ntohs(udp_header->len) == len) {
 		do_broadcast(frame + (ip_header->ihl * 4) + sizeof(struct udphdr), len - (ip_header->ihl * 4) - sizeof(struct udphdr));
 	} else {
-		printf("len: %d, ip_header: %d, ip_header->len: %d, udp_header: %d\n", len, ip_header->ihl, ntohs(ip_header->tot_len), ntohs(udp_header->len));
-		int i;
-		for (i = 0; i < len; i++) {
-			printf("%02x", frame[i]);
-		}
-		printf("\n");
-		for (i = 0; i < len; i++) {
-			printf("%c", frame[i]);
-		}
-		printf("\n");
 		red_log(REDD_DEBUG, "lengths didn't add up");
 	}
 }
