@@ -63,11 +63,20 @@ void
 handle_local_frame(char *frame, int len)
 {
 	struct iphdr *ip_header = (struct iphdr *)frame;
-	struct udphdr *udp_header = (struct udphdr *)(frame + (ip_header->ihl * 4));
-	if ((ip_header->ihl * 4) + ntohs(udp_header->len) == len) {
-		do_broadcast(frame + (ip_header->ihl * 4) + sizeof(struct udphdr), len - (ip_header->ihl * 4) - sizeof(struct udphdr));
+	// only route udp packets - protocol 17
+	if (ip_header->protocol == 17) {
+		struct udphdr *udp_header = (struct udphdr *)(frame + (ip_header->ihl * 4));
+		if ((ip_header->ihl * 4) + ntohs(udp_header->len) == len) {
+			int data_len = len - (ip_header->ihl * 4) - sizeof(struct udphdr);
+			// don't send packet if data_len is less than 0
+			if (data_len >= 0) {
+				do_broadcast(frame + (ip_header->ihl * 4) + sizeof(struct udphdr), data_len);
+			}
+		} else {
+			red_log(REDD_DEBUG, "lengths didn't add up");
+		}
 	} else {
-		red_log(REDD_DEBUG, "lengths didn't add up");
+		red_log(REDD_DEBUG, "protocol: %d", ip_header->protocol);
 	}
 }
 
