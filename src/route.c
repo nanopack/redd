@@ -67,7 +67,7 @@ handle_local_frame(char *frame, int len)
 	if (ip_header->protocol == 17) {
 		struct udphdr *udp_header = (struct udphdr *)(frame + (ip_header->ihl * 4));
 		if ((ip_header->ihl * 4) + ntohs(udp_header->len) == len) {
-			data_len = len - (ip_header->ihl * 4) - sizeof(struct udphdr);
+			int data_len = len - (ip_header->ihl * 4) - sizeof(struct udphdr);
 			// don't send packet if data_len is less than 0
 			if (data_len >= 0) {
 				do_broadcast(frame + (ip_header->ihl * 4) + sizeof(struct udphdr), data_len);
