@@ -63,6 +63,7 @@ void
 handle_local_frame(char *frame, int len)
 {
 	struct iphdr *ip_header = (struct iphdr *)frame;
+	red_log(REDD_DEBUG, "protocol: %d", ip_header->protocol);
 	struct udphdr *udp_header = (struct udphdr *)(frame + (ip_header->ihl * 4));
 	if ((ip_header->ihl * 4) + ntohs(udp_header->len) == len) {
 		do_broadcast(frame + (ip_header->ihl * 4) + sizeof(struct udphdr), len - (ip_header->ihl * 4) - sizeof(struct udphdr));
